@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCategoriasPlatilloTable extends Migration
+class CreateCategoriasPlatillosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateCategoriasPlatilloTable extends Migration
      */
     public function up()
     {
-        Schema::create('categorias_platillo', function (Blueprint $table) {
+        Schema::create('categorias_platillos', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nombre',50);
-            $table->string('descripcio',250)->nullable();
+            $table->string('descripcion',250)->nullable();
             $table->boolean('condicion')->default(1);
             $table->timestamps();
         });

@@ -14,3 +14,8 @@
 Route::get('/', function () {
     return view('contenido/contenido');
 });
+Route::get('/CategoriaPlatillo','CategoriaPlatilloController@index');
+Route::post('/CategoriaPlatillo/registrar','CategoriaPlatilloController@store');
+Route::put('/CategoriaPlatillo/actualizar','CategoriaPlatilloController@update');
+Route::put('/CategoriaPlatillo/desactivar','CategoriaPlatilloController@desactivar');
+Route::put('/CategoriaPlatillo/activar','CategoriaPlatilloController@activar');

@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Sistema Ventas Laravel Vue Js- IncanatoIT">
+    <meta name="description" content="Sistema Peñon">
     <meta name="author" content="NibleTeach.com">
     <meta name="keyword" content="Sistema ventas El Peñon">
     <link rel="shortcut icon" href="img/ico/penion-1.ico">
