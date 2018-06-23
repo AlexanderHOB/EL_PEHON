@@ -5,7 +5,7 @@
                         <a class="nav-link active" href="#"><i class="icon-speedometer"></i> Escritorio</a>
                     </li>
                     <li class="nav-title">
-                        Mantenimiento
+                        Items
                     </li>
                     <li class="nav-item nav-dropdown">
                         <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-bag"></i> Almacén</a>
@@ -29,6 +29,17 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="nav-item nav-dropdown">
+                            <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-bag"></i> Platillos</a>
+                            <ul class="nav-dropdown-items">
+                                <li @click="menu=1" class="nav-item">
+                                    <a class="nav-link" href="#"><i class="icon-bag"></i> Categoria</a>
+                                </li>
+                                <li @click="menu=2" class="nav-item">
+                                    <a class="nav-link" href="#"><i class="icon-bag"></i> Artículos</a>
+                                </li>
+                            </ul>
+                        </li>
                     <li class="nav-item nav-dropdown">
                         <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-basket"></i> Ventas</a>
                         <ul class="nav-dropdown-items">
