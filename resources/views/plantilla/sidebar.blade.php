@@ -32,10 +32,10 @@
                     <li class="nav-item nav-dropdown">
                             <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-bag"></i> Platillos</a>
                             <ul class="nav-dropdown-items">
-                                <li @click="menu=1" class="nav-item">
+                                <li @click="menu=5" class="nav-item">
                                     <a class="nav-link" href="#"><i class="icon-bag"></i> Categoria</a>
                                 </li>
-                                <li @click="menu=2" class="nav-item">
+                                <li @click="menu=6" class="nav-item">
                                     <a class="nav-link" href="#"><i class="icon-bag"></i> Artículos</a>
                                 </li>
                             </ul>
