@@ -16,6 +16,7 @@ window.Vue = require('vue');
  */
 
 Vue.component('categoriaplatillo', require('./components/CategoriaPlatillo.vue'));
+Vue.component('mesa', require('./components/Mesa.vue'));
 
 const app = new Vue({
     el: '#app',
