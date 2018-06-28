@@ -38,19 +38,19 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="CategoriaPlatillo in arrayCategoria" :key="CategoriaPlatillo.id">
+                                <tr v-for="categoria in arrayCategoria" :key="categoria.id">
                                     <td>
-                                        <button type="button" @click="abrirModal('categoria','actualizar',CategoriaPlatillo)" class="btn btn-warning btn-sm">
+                                        <button type="button" @click="abrirModal('categoria','actualizar',categoria)" class="btn btn-warning btn-sm">
                                           <i class="icon-pencil"></i>
                                         </button> &nbsp;
                                         <button type="button" class="btn btn-danger btn-sm">
                                           <i class="icon-trash"></i>
                                         </button>
                                     </td>
-                                    <td v-text="CategoriaPlatillo.nombre"></td>
-                                    <td v-text="CategoriaPlatillo.descripcion"></td>
+                                    <td v-text="categoria.nombre"></td>
+                                    <td v-text="categoria.descripcion"></td>
                                     <td>
-                                        <div v-if="CategoriaPlatillo.condicion">
+                                        <div v-if="categoria.condicion">
                                             <span class="badge badge-success">Activo</span>
                                         </div>
                                         <div v-else>
