@@ -47992,8 +47992,8 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "tbody",
-                _vm._l(_vm.arrayCategoria, function(categoria) {
-                  return _c("tr", { key: categoria.id }, [
+                _vm._l(_vm.arrayCategoria, function(CategoriaPlatillo) {
+                  return _c("tr", { key: CategoriaPlatillo.id }, [
                     _c("td", [
                       _c(
                         "button",
@@ -48005,7 +48005,7 @@ var render = function() {
                               _vm.abrirModal(
                                 "categoria",
                                 "actualizar",
-                                categoria
+                                CategoriaPlatillo
                               )
                             }
                           }
@@ -48017,15 +48017,17 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _c("td", {
-                      domProps: { textContent: _vm._s(categoria.nombre) }
+                      domProps: { textContent: _vm._s(_vm.categoria.nombre) }
                     }),
                     _vm._v(" "),
                     _c("td", {
-                      domProps: { textContent: _vm._s(categoria.descripcion) }
+                      domProps: {
+                        textContent: _vm._s(_vm.categoria.descripcion)
+                      }
                     }),
                     _vm._v(" "),
                     _c("td", [
-                      categoria.condicion
+                      _vm.categoria.condicion
                         ? _c("div", [
                             _c("span", { staticClass: "badge badge-success" }, [
                               _vm._v("Activo")
