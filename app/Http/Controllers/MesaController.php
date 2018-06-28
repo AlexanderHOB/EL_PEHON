@@ -12,10 +12,30 @@ class MesaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $mesas=Mesa::all();
-        return $mesas;
+        if (!$request->ajax()) return redirect('/');
+
+        $buscar = $request->buscar;
+        $criterio = $request->criterio;
+
+        if ($buscar == ''){
+            $mesas=Mesa::orderBy('id', 'desc')->paginate(3);
+        }
+        else{
+            $mesas=Mesa::where($criterio, 'like', '%'.$buscar.'%')->orderBy('id', 'desc')->paginate(3);
+        }
+        return[
+            'pagination'    =>[
+                'total'         =>$mesas->total(),
+                'current_page'  =>$mesas->currentPage(),
+                'per_page'      =>$mesas->perPage(),
+                'last_page'     =>$mesas->lastPage(),
+                'from'          =>$mesas->firstItem(),
+                'to'            =>$mesas->lastItem(),
+            ],
+            'mesas' =>  $mesas
+        ];
     }
 
 
@@ -27,6 +47,7 @@ class MesaController extends Controller
      */
     public function store(Request $request)
     {
+        if (!$request->ajax()) return redirect('/');
         $mesa = new Mesa();
         $mesa->numero=$request->numero;
         $mesa->capacidad=$request->capacidad;
@@ -45,6 +66,7 @@ class MesaController extends Controller
      */
     public function update(Request $request)
     {
+        if (!$request->ajax()) return redirect('/');
         $mesa = Mesa::findOrFail($request->id);
         $mesa->numero=$request->numero;
         $mesa->capacidad=$request->capacidad;
@@ -54,12 +76,14 @@ class MesaController extends Controller
     }
     public function desactivar(Request $request)
     {
+        if (!$request->ajax()) return redirect('/');
         $mesa = Mesa::findOrFail($request->id);
         $mesa->condicion='0';
         $mesa->save();
     }
     public function activar(Request $request)
     {
+        if (!$request->ajax()) return redirect('/');
         $mesa = Mesa::findOrFail($request->id);
         $mesa->condicion='1';
         $mesa->save();
