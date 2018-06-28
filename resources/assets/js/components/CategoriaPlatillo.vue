@@ -47,10 +47,10 @@
                                           <i class="icon-trash"></i>
                                         </button>
                                     </td>
-                                    <td v-text="categoria.nombre"></td>
-                                    <td v-text="categoria.descripcion"></td>
+                                    <td v-text="CategoriaPlatillo.nombre"></td>
+                                    <td v-text="CategoriaPlatillo.descripcion"></td>
                                     <td>
-                                        <div v-if="categoria.condicion">
+                                        <div v-if="CategoriaPlatillo.condicion">
                                             <span class="badge badge-success">Activo</span>
                                         </div>
                                         <div v-else>
