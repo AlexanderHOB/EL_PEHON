@@ -19,12 +19,12 @@
                         <div class="form-group row">
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <select class="form-control col-md-3" id="opcion" name="opcion">
+                                    <select class="form-control col-md-3" v-model="criterio">
                                       <option value="nombre">Nombre</option>
                                       <option value="descripcion">Descripción</option>
                                     </select>
-                                    <input type="text" id="texto" name="texto" class="form-control" placeholder="Texto a buscar">
-                                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                    <input type="text" v-model="buscar" @keyup.enter="listarCategoria(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
+                                    <button type="submit" class="btn btn-primary" @click="listarCategoria(1,buscar,criterio)"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
@@ -43,9 +43,16 @@
                                         <button type="button" @click="abrirModal('categoria','actualizar',categoria)" class="btn btn-warning btn-sm">
                                           <i class="icon-pencil"></i>
                                         </button> &nbsp;
-                                        <button type="button" class="btn btn-danger btn-sm">
+                                        <template v-if="categoria.condicion">
+                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarCategoria(categoria.id)">
                                           <i class="icon-trash"></i>
                                         </button>
+                                        </template>
+                                        <template v-else>
+                                            <button type="button" class="btn btn-info btn-sm" @click="activarCategoria(categoria.id)">
+                                          <i class="icon-check"></i>
+                                        </button>
+                                        </template>
                                     </td>
                                     <td v-text="categoria.nombre"></td>
                                     <td v-text="categoria.descripcion"></td>
@@ -63,23 +70,15 @@
                         </table>
                         <nav>
                             <ul class="pagination">
-                                <li class="page-item">
-                                    <a class="page-link" href="#">Ant</a>
+                                <li class="page-item" v-if="pagination.current_page>1">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page-1,buscar,criterio)">Ant</a>
                                 </li>
-                                <li class="page-item active">
-                                    <a class="page-link" href="#">1</a>
+                                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page,buscar,criterio)" v-text="page"></a>
                                 </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">2</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">3</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">4</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">Sig</a>
+                                
+                                <li class="page-item" v-if="pagination.current_page<pagination.last_page">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page+1,buscar,criterio)">Sig</a>
                                 </li>
                             </ul>
                         </nav>
@@ -125,7 +124,7 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
                             <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarCategoria()">Guardar</button>
-                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary">Actualizar</button>
+                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarCategoria()">Actualizar</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -163,6 +162,7 @@
     export default {
         data (){
             return {
+                categoria_id:0,
                 nombre : '',
                 descripcion : '',
                 arrayCategoria : [],
@@ -170,18 +170,64 @@
                 tituloModal : '',
                 tipoAccion : 0,
                 errorCategoria : 0,
-                errorMostrarMsjCategoria : []
+                errorMostrarMsjCategoria : [],
+                pagination : {
+                    'total' :0,
+                    'current_page':0,
+                    'per_page' :0,
+                    'last_page':0,     
+                    'from'     :0, 
+                    'to'       :0,   
+                },
+                offset : 3,
+                criterio:'nombre',
+                buscar:''
+            }
+        },
+        computed:{
+            isActived: function(){
+                return this.pagination.current_page;
+            },
+            //calculate los elementos de paginacion
+            pagesNumber: function(){
+                if(!this.pagination.to){
+                    return [];
+                }
+                var from =this.pagination.current_page - this.offset;
+                if(from<1){
+                    from=1;
+                }
+                var to = from+(this.offset*2);
+                if (to >= this.pagination.last_page){
+                    to=this.pagination.last_page;
+                }
+                var pagesArray =[];
+                while(from<= to){
+                    pagesArray.push(from);
+                    from++;
+                }
+                return pagesArray;
             }
         },
         methods : {
-            listarCategoria (){
+            listarCategoria (page,buscar,criterio){
                 let me=this;
-                axios.get('/CategoriaPlatillo').then(function (response) {
-                    me.arrayCategoria = response.data;
+                var url='/CategoriaPlatillo?page='+page+'&buscar='+buscar+'&criterio='+criterio;
+                axios.get(url).then(function (response) {
+                    var respuesta=response.data;
+                    me.arrayCategoria=respuesta.categorias.data;
+                    me.pagination=respuesta.pagination;
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
+            },
+            cambiarPagina(page,buscar,criterio){
+                let me=this;
+                //Actualizar la Página Actual
+                me.pagination.current_page=page;
+                //Enviar la peticion para visualizar la pagina
+                me.listarCategoria(page,buscar,criterio)
             },
             registrarCategoria(){
                 if (this.validarCategoria()){
@@ -195,10 +241,104 @@
                     'descripcion': this.descripcion
                 }).then(function (response) {
                     me.cerrarModal();
-                    me.listarCategoria();
+                    me.listarCategoria(1,'','nombre');
                 }).catch(function (error) {
                     console.log(error);
                 });
+            },
+            actualizarCategoria(){
+                if (this.validarCategoria()){
+                    return;
+                }
+                
+                let me = this;
+
+                axios.put('/CategoriaPlatillo/actualizar',{
+                    'nombre': this.nombre,
+                    'descripcion': this.descripcion,
+                    'id':this.categoria_id
+                }).then(function (response) {
+                    me.cerrarModal();
+                    me.listarCategoria(1,'','nombre');
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            },
+            desactivarCategoria(id){
+                const swalWithBootstrapButtons = swal.mixin({
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+                })
+
+                swalWithBootstrapButtons({
+                title: '¿Esta seguro de desactivar la categoria?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Aceptar',
+                cancelButtonText: 'Cancelar',
+                reverseButtons: true
+                }).then((result) => {
+                if (result.value) {
+                    let me = this;
+
+                    axios.put('/CategoriaPlatillo/desactivar',{
+                    'id':id
+                }).then(function (response) {
+                    me.listarCategoria(1,'','nombre');
+                    swalWithBootstrapButtons(
+                    'Desactivado!',
+                    'El Registro a sido desacticado con éxito.',
+                    'success'
+                    )
+                }).catch(function (error) {
+                    console.log(error);
+                });
+                    
+                } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === swal.DismissReason.cancel
+                ) {
+                }
+})
+            },
+             activarCategoria(id){
+                const swalWithBootstrapButtons = swal.mixin({
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+                })
+
+                swalWithBootstrapButtons({
+                title: '¿Esta seguro de activar la categoria?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Aceptar',
+                cancelButtonText: 'Cancelar',
+                reverseButtons: true
+                }).then((result) => {
+                if (result.value) {
+                    let me = this;
+
+                    axios.put('/CategoriaPlatillo/activar',{
+                    'id':id
+                }).then(function (response) {
+                    me.listarCategoria(1,'','nombre');
+                    swalWithBootstrapButtons(
+                    'Activado!',
+                    'El Registro a sido activado con éxito.',
+                    'success'
+                    )
+                }).catch(function (error) {
+                    console.log(error);
+                });
+                    
+                } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === swal.DismissReason.cancel
+                ) {
+                }
+})
             },
             validarCategoria(){
                 this.errorCategoria=0;
@@ -232,7 +372,14 @@
                             }
                             case 'actualizar':
                             {
-                                
+                                console.log(data);
+                                this.modal=1;
+                                this.tituloModal='Actualizar Categoria';
+                                this.tipoAccion=2;
+                                this.categoria_id=data['id'];
+                                this.nombre=data['nombre'];
+                                this.descripcion=data['descripcion'];
+                                break;
                             }
                         }
                     }
@@ -240,7 +387,7 @@
             }
         },
         mounted() {
-            this.listarCategoria();
+            this.listarCategoria(1,this.buscar,this.criterio);
         }
     }
 </script>

@@ -1,20 +1,42 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\BD;
 use Illuminate\Http\Request;
 use App\CategoriaPlatillo;
 class CategoriaPlatilloController extends Controller
+
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request )
     {
-        $categorias=CategoriaPlatillo::all();
-        return $categorias;
+
+        if(!$request->ajax()) return redirect('/');
+
+        $buscar= $request->buscar;
+        $criterio=$request->criterio;
+        if($buscar==''){
+            $categorias=CategoriaPlatillo::orderBy('id','desc')->paginate(5);
+        }else{
+            $categorias= CategoriaPlatillo::where($criterio,'like','%'.$buscar.'%')->orderBy('id','desc')->paginate(3);
+        }
+        
+        return [
+            'pagination' => [
+                'total' =>          $categorias->total(),
+                'current_page'=>    $categorias->currentPage(),
+                'per_page'=>        $categorias->perPage(),
+                'last_page'=>       $categorias->lastPage(),
+                'from' =>           $categorias->firstItem(),
+                'to' =>             $categorias->lastItem()
+            ],
+            'categorias' => $categorias
+        ];
+        
     }
 
 
@@ -26,20 +48,22 @@ class CategoriaPlatilloController extends Controller
      */
     public function store(Request $request)
     {
-        $categoria = new Categoria();
+        if(!$request->ajax()) return redirect('/');
+        $categoria = new CategoriaPlatillo();
         $categoria->nombre=$request->nombre;
-        $categoria->descripcion=$request->request;
+        $categoria->descripcion=$request->descripcion;
         $categoria->condicion='1';
         $categoria->save();
 
     }
 
   
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $categoria = Categoria::findOrFail($request->id);
+        if(!$request->ajax()) return redirect('/');
+        $categoria = CategoriaPlatillo::findOrFail($request->id);
         $categoria->nombre=$request->nombre;
-        $categoria->descripcion=$request->request;
+        $categoria->descripcion=$request->descripcion;
         $categoria->condicion='1';
         $categoria->save();
     }
@@ -50,15 +74,17 @@ class CategoriaPlatilloController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function desactivar(Request $request, $id)
+    public function desactivar(Request $request)
     {
-        $categoria = Categoria::findOrFail($request->id);
+        if(!$request->ajax()) return redirect('/');
+        $categoria = CategoriaPlatillo::findOrFail($request->id);
         $categoria->condicion='0';
         $categoria->save();
     }
-    public function activar(Request $request, $id)
+    public function activar(Request $request)
     {
-        $categoria = Categoria::findOrFail($request->id);
+        if(!$request->ajax()) return redirect('/');
+        $categoria = CategoriaPlatillo::findOrFail($request->id);
         $categoria->condicion='1';
         $categoria->save();
     }
