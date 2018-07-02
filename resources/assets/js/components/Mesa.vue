@@ -100,13 +100,13 @@
                         <div class="form-group row">
                             <label class="col-md-3 form-control-label" for="text-input">Número</label>
                             <div class="col-md-9">
-                                <input type="text" v-model="numero" class="form-control" placeholder="Número de Mesa">
+                                <input type="number" v-model="numero" class="form-control" placeholder="Número de Mesa">
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-md-3 form-control-label" for="capacidad-input">Capacidad</label>
+                            <label class="col-md-3 form-control-label" for="text-input">Capacidad</label>
                             <div class="col-md-9">
-                                <input type="capacidad" v-model="capacidad" class="form-control" placeholder="Ingresar Capacidad">
+                                <input type="number" v-model="capacidad" class="form-control" placeholder="Ingresar Capacidad">
                             </div>
                         </div>
                         <div class="form-group row">
@@ -135,7 +135,30 @@
         <!-- /.modal-dialog -->
     </div>
     <!--Fin del modal-->
-</main>
+ <!-- Inicio del modal Eliminar -->
+            <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-danger" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Eliminar Mesa</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Estas seguro de eliminar la mesa?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <button type="button" class="btn btn-danger">Eliminar</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- Fin del modal Eliminar -->
+        </main>
 </template>
 
 <script>
@@ -372,7 +395,7 @@
                         }
                     }
                 }
-            },
+            }
         },
         mounted() {
             this.listarMesa(1, this.buscar, this.criterio);
