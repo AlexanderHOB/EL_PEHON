@@ -20,6 +20,7 @@ class CreateEmpleadosTable extends Migration
             $table->double('salario',8,2);
             $table->date('fecha_inicio');
             $table->integer('dias_laborados');
+            $table->boolean('condicion')->default(1);
         });
     }
 
