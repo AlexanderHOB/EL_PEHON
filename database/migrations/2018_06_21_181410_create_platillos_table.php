@@ -16,10 +16,17 @@ class CreatePlatillosTable extends Migration
         Schema::create('platillos', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->string('nombre',60);
-            $table->string('medida',40);
-            $table->decimal('precio',8,2);
-            $table->string('direccion')->nullable();
+            $table->integer('idcategoria')->unsigned();
+            $table->string('nombre',60)->unique();
+            $table->string('codigo',5);
+            $table->string('medida',40)->nullable();
+            $table->decimal('precio',11,2);
+            $table->string('descripcion',256)->nullable();
+            $table->boolean('condicion')->default(1);
+
+
+            $table->foreign('idcategoria')->references('id')->on('categorias_platillos');
+            
         });
     }
 

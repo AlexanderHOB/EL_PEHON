@@ -14,12 +14,24 @@
 Route::get('/', function () {
     return view('contenido/contenido');
 });
+//Categorias Platillos
 Route::get('/CategoriaPlatillo','CategoriaPlatilloController@index');
 Route::post('/CategoriaPlatillo/registrar','CategoriaPlatilloController@store');
 Route::put('/CategoriaPlatillo/actualizar','CategoriaPlatilloController@update');
 Route::put('/CategoriaPlatillo/desactivar','CategoriaPlatilloController@desactivar');
 Route::put('/CategoriaPlatillo/activar','CategoriaPlatilloController@activar');
-
+Route::get('/Categoria/selectCategoria','CategoriaPlatilloController@selectCategoria');
+//Platillos
+Route::get('/platillo','PlatilloController@index');
+Route::post('/platillo/registrar','PlatilloController@store');
+Route::put('/platillo/actualizar','PlatilloController@update');
+Route::put('/platillo/desactivar','PlatilloController@desactivar');
+Route::put('/platillo/activar','PlatilloController@activar');
+//Clientes
+Route::get('/cliente','ClienteController@index');
+Route::post('/cliente/registrar','ClienteController@store');
+Route::put('/cliente/actualizar','ClienteController@update');
+//Mesas
 Route::get('/Mesa','MesaController@index');
 Route::post('/Mesa/registrar','MesaController@store');
 Route::put('/Mesa/actualizar','MesaController@update');

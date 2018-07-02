@@ -13,4 +13,7 @@ class CategoriaPlatillo extends Model
         'descripcion',
         'condicion'
         ];
+        public function platillos(){
+            return $this->hasMany('App\Platillo');
+        }
 }

@@ -9,7 +9,7 @@
                 <div class="card">
                     <div class="card-header">
                         <i class="fa fa-align-justify"></i> Categorías
-                        <button type="button" @click="abrirModal('categoria','registrar')" class="btn btn-secondary">
+                        <button type="button" @click="abrirModal('platillo','registrar')" class="btn btn-secondary">
                             <i class="icon-plus"></i>&nbsp;Nuevo
                         </button>
                     </div>
@@ -21,8 +21,8 @@
                                       <option value="nombre">Nombre</option>
                                       <option value="descripcion">Descripción</option>
                                     </select>
-                                    <input type="text" v-model="buscar" @keyup.enter="listarCategoria(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
-                                    <button type="submit" class="btn btn-primary" @click="listarCategoria(1,buscar,criterio)"><i class="fa fa-search"></i> Buscar</button>
+                                    <input type="text" v-model="buscar" @keyup.enter="listarPlatillo(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
+                                    <button type="submit" class="btn btn-primary" @click="listarPlatillo(1,buscar,criterio)"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
@@ -30,32 +30,38 @@
                             <thead>
                                 <tr>
                                     <th>Opciones</th>
+                                    <th>Código</th>
                                     <th>Nombre</th>
+                                    <th>Categoria</th>
+                                    <th>Precio Ventas</th>
                                     <th>Descripción</th>
                                     <th>Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="categoria in arrayCategoria" :key="categoria.id">
+                                <tr v-for="platillo in arrayPlatillo" :key="platillo.id">
                                     <td>
-                                        <button type="button" @click="abrirModal('categoria','actualizar',categoria)" class="btn btn-warning btn-sm">
+                                        <button type="button" @click="abrirModal('platillo','actualizar',platillo)" class="btn btn-warning btn-sm">
                                           <i class="icon-pencil"></i>
                                         </button> &nbsp;
-                                        <template v-if="categoria.condicion">
-                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarCategoria(categoria.id)">
+                                        <template v-if="platillo.condicion">
+                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarPlatillo(platillo.id)">
                                           <i class="icon-trash"></i>
                                         </button>
                                         </template>
                                         <template v-else>
-                                            <button type="button" class="btn btn-info btn-sm" @click="activarCategoria(categoria.id)">
+                                            <button type="button" class="btn btn-info btn-sm" @click="activarPlatillo(platillo.id)">
                                           <i class="icon-check"></i>
                                         </button>
                                         </template>
                                     </td>
-                                    <td v-text="categoria.nombre"></td>
-                                    <td v-text="categoria.descripcion"></td>
+                                    <td v-text="platillo.codigo"></td>
+                                    <td v-text="platillo.nombre"></td>
+                                    <td v-text="platillo.nombre_categoria"></td>
+                                    <td v-text="platillo.precio"></td>
+                                    <td v-text="platillo.descripcion"></td>
                                     <td>
-                                        <div v-if="categoria.condicion">
+                                        <div v-if="platillo.condicion">
                                             <span class="badge badge-success">Activo</span>
                                         </div>
                                         <div v-else>
@@ -97,21 +103,51 @@
                         <div class="modal-body">
                             <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
                                 <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Categoria</label>
+                                    <div class="col-md-9">
+                                        <select class="form-control" v-model="idcategoria" >
+                                            <option value="0" disabled>Seleccione</option>
+                                            <option v-for="categoria in arrayCategoria" :key="categoria.id" :value="categoria.id" v-text="categoria.nombre"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Codigo</label>
+                                    <div class="col-md-9">
+                                        <input type="text" v-model="codigo" class="form-control" placeholder="Código de Platillo">
+                                        
+                                    </div>
+                                </div>
+                                <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Nombre</label>
                                     <div class="col-md-9">
-                                        <input type="text" v-model="nombre" class="form-control" placeholder="Nombre de categoría">
+                                        <input type="text" v-model="nombre" class="form-control" placeholder="Nombre de Platillo">
                                         
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Precio de Venta</label>
+                                    <div class="col-md-9">
+                                        <input type="number" v-model="precio" class="form-control" placeholder="">
+                                        
+                                    </div>
+                                    
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="email-input">Medida</label>
+                                    <div class="col-md-9">
+                                        <input type="text" v-model="medida" class="form-control" placeholder="Ingrese medida">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="email-input">Descripción</label>
                                     <div class="col-md-9">
-                                        <input type="email" v-model="descripcion" class="form-control" placeholder="Ingrese descripción">
+                                        <input type="text" v-model="descripcion" class="form-control" placeholder="Ingrese descripción">
                                     </div>
                                 </div>
-                                <div v-show="errorCategoria" class="form-group row div-error">
+                                <div v-show="errorPlatillo" class="form-group row div-error">
                                     <div class="text-center text-error">
-                                        <div v-for="error in errorMostrarMsjCategoria" :key="error" v-text="error">
+                                        <div v-for="error in errorMostrarMsjPlatillo" :key="error" v-text="error">
 
                                         </div>
                                     </div>
@@ -121,8 +157,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-                            <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarCategoria()">Guardar</button>
-                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarCategoria()">Actualizar</button>
+                            <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarPlatillo()">Guardar</button>
+                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarPlatillo()">Actualizar</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -160,15 +196,20 @@
     export default {
         data (){
             return {
-                categoria_id:0,
+                platillo_id:0,
+                idcategoria:0,
+                nombre_categoria:'',
+                codigo:'',
                 nombre : '',
+                precio:'',
+                medida:'',
                 descripcion : '',
-                arrayCategoria : [],
+                arrayPlatillo : [],
                 modal : 0,
                 tituloModal : '',
                 tipoAccion : 0,
-                errorCategoria : 0,
-                errorMostrarMsjCategoria : [],
+                errorPlatillo : 0,
+                errorMostrarMsjPlatillo : [],
                 pagination : {
                     'total' :0,
                     'current_page':0,
@@ -179,7 +220,8 @@
                 },
                 offset : 3,
                 criterio:'nombre',
-                buscar:''
+                buscar:'',
+                arrayCategoria:[]
             }
         },
         computed:{
@@ -208,13 +250,26 @@
             }
         },
         methods : {
-            listarCategoria (page,buscar,criterio){
+            listarPlatillo (page,buscar,criterio){
                 let me=this;
-                var url='/CategoriaPlatillo?page='+page+'&buscar='+buscar+'&criterio='+criterio;
+                var url='/platillo?page='+page+'&buscar='+buscar+'&criterio='+criterio;
                 axios.get(url).then(function (response) {
                     var respuesta=response.data;
-                    me.arrayCategoria=respuesta.categorias.data;
+                    me.arrayPlatillo=respuesta.platillos.data;
                     me.pagination=respuesta.pagination;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
+            selectCategoria(){
+                let me=this;
+                var url='/Categoria/selectCategoria';
+                axios.get(url).then(function (response) {
+                   
+                    var respuesta=response.data;
+                    me.arrayCategoria=respuesta.categorias;
+                    
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -225,44 +280,52 @@
                 //Actualizar la Página Actual
                 me.pagination.current_page=page;
                 //Enviar la peticion para visualizar la pagina
-                me.listarCategoria(page,buscar,criterio)
+                me.listarPlatillo(page,buscar,criterio)
             },
-            registrarCategoria(){
-                if (this.validarCategoria()){
+            registrarPlatillo(){
+                if (this.validarPlatillo()){
                     return;
                 }
                 
                 let me = this;
 
-                axios.post('/CategoriaPlatillo/registrar',{
+                axios.post('/platillo/registrar',{
+                    'idcategoria':this.idcategoria,
+                    'codigo':this.codigo,
                     'nombre': this.nombre,
+                    'precio':this.precio,
+                    'medida':this.medida,
                     'descripcion': this.descripcion
                 }).then(function (response) {
                     me.cerrarModal();
-                    me.listarCategoria(1,'','nombre');
+                    me.listarPlatillo(1,'','nombre');
                 }).catch(function (error) {
                     console.log(error);
                 });
             },
-            actualizarCategoria(){
-                if (this.validarCategoria()){
+            actualizarPlatillo(){
+                if (this.validarPlatillo()){
                     return;
                 }
                 
                 let me = this;
 
-                axios.put('/CategoriaPlatillo/actualizar',{
+                axios.put('/platillo/actualizar',{
+                    'idcategoria':this.idcategoria,
+                    'codigo':this.codigo,
                     'nombre': this.nombre,
+                    'precio':this.precio,
+                    'medida':this.medida,
                     'descripcion': this.descripcion,
-                    'id':this.categoria_id
+                    'id':this.platillo_id
                 }).then(function (response) {
                     me.cerrarModal();
-                    me.listarCategoria(1,'','nombre');
+                    me.listarPlatillo(1,'','nombre');
                 }).catch(function (error) {
                     console.log(error);
                 });
             },
-            desactivarCategoria(id){
+            desactivarPlatillo(id){
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
@@ -270,7 +333,7 @@
                 })
 
                 swalWithBootstrapButtons({
-                title: '¿Esta seguro de desactivar la categoria?',
+                title: '¿Esta seguro de desactivar el Platillo?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Aceptar',
@@ -280,10 +343,10 @@
                 if (result.value) {
                     let me = this;
 
-                    axios.put('/CategoriaPlatillo/desactivar',{
+                    axios.put('/platillo/desactivar',{
                     'id':id
                 }).then(function (response) {
-                    me.listarCategoria(1,'','nombre');
+                    me.listarPlatillo(1,'','nombre');
                     swalWithBootstrapButtons(
                     'Desactivado!',
                     'El Registro a sido desacticado con éxito.',
@@ -300,7 +363,7 @@
                 }
 })
             },
-             activarCategoria(id){
+             activarPlatillo(id){
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
@@ -308,7 +371,7 @@
                 })
 
                 swalWithBootstrapButtons({
-                title: '¿Esta seguro de activar la categoria?',
+                title: '¿Esta seguro de activar el Platillo?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Aceptar',
@@ -318,10 +381,10 @@
                 if (result.value) {
                     let me = this;
 
-                    axios.put('/CategoriaPlatillo/activar',{
+                    axios.put('/platillo/activar',{
                     'id':id
                 }).then(function (response) {
-                    me.listarCategoria(1,'','nombre');
+                    me.listarPlatillo(1,'','nombre');
                     swalWithBootstrapButtons(
                     'Activado!',
                     'El Registro a sido activado con éxito.',
@@ -338,54 +401,70 @@
                 }
 })
             },
-            validarCategoria(){
-                this.errorCategoria=0;
-                this.errorMostrarMsjCategoria =[];
+            validarPlatillo(){
+                this.errorPlatillo=0;
+                this.errorMostrarMsjPlatillo =[];
 
-                if (!this.nombre) this.errorMostrarMsjCategoria.push("El nombre de la categoría no puede estar vacío.");
+                if(this.idcategoria==0) this.errorMostrarMsjPlatillo.push("Seleccione una Categoria");
+                if (!this.nombre) this.errorMostrarMsjPlatillo.push("El nombre del platillo no puede estar vacío.");
+                if(!this.precio) this.errorMostrarMsjPlatillo.push("El precio venta del platillo debe ser un número y no puede estar vacio ");
+                
+                if (this.errorMostrarMsjPlatillo.length) this.errorPlatillo = 1;
 
-                if (this.errorMostrarMsjCategoria.length) this.errorCategoria = 1;
-
-                return this.errorCategoria;
+                return this.errorPlatillo;
             },
             cerrarModal(){
                 this.modal=0;
                 this.tituloModal='';
+                this.idcategoria=0;
+                this.nombre_categoria='';
+                this.codigo='';
                 this.nombre='';
+                this.precio=0;
                 this.descripcion='';
+                this.errorPlatillo=0;
             },
             abrirModal(modelo, accion, data = []){
                 switch(modelo){
-                    case "categoria":
+                    case "platillo":
                     {
                         switch(accion){
                             case 'registrar':
                             {
                                 this.modal = 1;
-                                this.tituloModal = 'Registrar Categoría';
-                                this.nombre= '';
-                                this.descripcion = '';
+                                this.tituloModal = 'Registrar Platillo';
+                                this.idcategoria=0;
+                                this.nombre_categoria='';
+                                this.codigo='';
+                                this.nombre='';
+                                this.precio=0;
+                                this.descripcion='';
                                 this.tipoAccion = 1;
                                 break;
                             }
                             case 'actualizar':
                             {
-                                console.log(data);
+                                //console.log(data);
                                 this.modal=1;
-                                this.tituloModal='Actualizar Categoria';
+                                this.tituloModal='Actualizar Platillo';
                                 this.tipoAccion=2;
-                                this.categoria_id=data['id'];
+                                this.platillo_id=data['id'];
+                                this.idcategoria=data['idcategoria'];
+                                this.codigo=data['codigo'];
                                 this.nombre=data['nombre'];
+                                this.precio=data['precio'];
+                                this.medida=data['medida'];
                                 this.descripcion=data['descripcion'];
                                 break;
                             }
                         }
                     }
                 }
+                this.selectCategoria();
             }
         },
         mounted() {
-            this.listarCategoria(1,this.buscar,this.criterio);
+            this.listarPlatillo(1,this.buscar,this.criterio);
         }
     }
 </script>
