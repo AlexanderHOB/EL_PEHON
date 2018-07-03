@@ -21,6 +21,8 @@ class CreateEmpleadosTable extends Migration
             $table->date('fecha_inicio');
             $table->integer('dias_laborados');
             $table->boolean('condicion')->default(1);
+
+            $table->foreign('id')->references('id')->on('personas')->onDelete('cascade');
         });
     }
 

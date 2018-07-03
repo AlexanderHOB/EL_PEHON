@@ -15,4 +15,8 @@ class Empleado extends Model
         'dias_laborados'.
         'condicion'
         ];
+    public function persona()
+    {
+        return $this->belongsTo('App\Persona');
+    }
 }
