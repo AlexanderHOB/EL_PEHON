@@ -31,13 +31,15 @@ Route::put('/platillo/activar','PlatilloController@activar');
 Route::get('/cliente','ClienteController@index');
 Route::post('/cliente/registrar','ClienteController@store');
 Route::put('/cliente/actualizar','ClienteController@update');
+//Roles
+Route::get('/rol','RolController@index');
 //Mesas
 Route::get('/Mesa','MesaController@index');
 Route::post('/Mesa/registrar','MesaController@store');
 Route::put('/Mesa/actualizar','MesaController@update');
 Route::put('/Mesa/desactivar','MesaController@desactivar');
 Route::put('/Mesa/activar','MesaController@activar');
-
+//Empleados
 Route::get('/Empleado','EmpleadoController@index');
 Route::post('/Empleado/registrar','EmpleadoController@store');
 Route::put('/Empleado/actualizar','EmpleadoController@update');

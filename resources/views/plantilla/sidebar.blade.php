@@ -25,6 +25,9 @@
                             <li @click="menu=5" class="nav-item">
                                 <a class="nav-link" href="#"><i class="icon-bag"></i> Empleado</a>
                             </li>
+                            <li @click="menu=6" class="nav-item">
+                                <a class="nav-link" href="#"><i class="icon-bag"></i> Roles</a>
+                            </li>
                         </ul>
                     </li>
                     <li class="nav-item nav-dropdown">
