@@ -52,6 +52,19 @@
                                         <button type="button" @click="abrirModal('personas','actualizar',persona)" class="btn btn-warning btn-sm">
                                           <i class="icon-pencil"></i>
                                         </button> &nbsp;
+<<<<<<< HEAD
+=======
+                                        <template v-if="empleado.condicion">
+                                            <button type="button" class="btn btn-danger btn sm" @click="desactivarEmpleado(persona.id)">
+                                                <i class="icon-trash"></i>
+                                            </button>
+                                        </template>
+                                        <template v-else>
+                                            <button type="button" class="btn btn-info btn sm" @click="activarEmpleado(persona.id)">
+                                                <i class="icon-check"></i>
+                                            </button>
+                                        </template>
+>>>>>>> 8700e072751284091db0c1a28b61ee8c40250b4a
 
                                     </td>
                                     <td v-text="persona.nombre"></td>
@@ -230,9 +243,9 @@
                 celular:'',
                 email:'',
                 tipo_empleado:'',
-                salario:'',
-                fecha_inicio:'',
-                dias_laborados:'',               
+                salario:0,
+                fecha_inicio:'2018-07-09',
+                dias_laborados:0,            
                 arrayPersona : [],
                 modal : 0,
                 tituloModal : '',
@@ -278,7 +291,8 @@
             }
         },
         methods : {
-            listarPersona (page,buscar,criterio){
+            
+             listarPersona (page,buscar,criterio){
                 let me=this;
                 var url='/Empleado?page='+page+'&buscar='+buscar+'&criterio='+criterio;
                 axios.get(url).then(function (response) {
@@ -368,9 +382,9 @@
                 this.celular='';
                 this.email='';
                 this.tipo_empleado='';
-                this.salario='';
+                this.salario=0;
                 this.fecha_inicio='';
-                this.dias_laborados='';
+                this.dias_laborados=0;
                 this.errorPersona=0;
             },
             abrirModal(modelo, accion, data = []){
@@ -389,9 +403,9 @@
                                 this.celular='';
                                 this.email='';
                                 this.tipo_empleado='';
-                                this.salario='';
+                                this.salario=0;
                                 this.fecha_inicio='';
-                                this.dias_laborados='';
+                                this.dias_laborados=0;
                                 this.tipoAccion = 1;
                                 break;
                             }

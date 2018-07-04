@@ -13,7 +13,12 @@ class Empleado extends Model
         'tipo_empleado',
         'salario',
         'fecha_inicio',
+<<<<<<< HEAD
         'dias_laborados'
+=======
+        'dias_laborados',   
+        'condicion'
+>>>>>>> 8700e072751284091db0c1a28b61ee8c40250b4a
         ];
 
         public $timestamps = false;

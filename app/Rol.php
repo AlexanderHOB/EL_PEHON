@@ -13,4 +13,7 @@ class Rol extends Model
         'condicion'
     ];
     public $timestamps=false;
+    public function users(){
+        return $this->hasMany('App\User');
+    }
 }
