@@ -22,7 +22,7 @@
                                       <option value="num_documento">Documento</option>
                                       <option value="email">Email</option>
                                       <option value="celular">Celular</option>
-                                      <option value="tipo_empleado">Tipo</option>
+                                      <option value="tipo_empleado">Tipo Empleado</option>
                                       <option value="salario">Salario</option>
                                     </select>
                                     <input type="text" v-model="buscar" @keyup.enter="listarPersona(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
@@ -44,7 +44,6 @@
                                     <th>Salario</th>
                                     <th>Fecha Contrato</th>
                                     <th>Días Laborados</th>
-                                    <th>Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -53,16 +52,6 @@
                                         <button type="button" @click="abrirModal('personas','actualizar',persona)" class="btn btn-warning btn-sm">
                                           <i class="icon-pencil"></i>
                                         </button> &nbsp;
-                                        <template v-if="empleado.condicion">
-                                            <button type="button" class="btn btn-danger btn sm" @click="desactivarEmpleado(empleado.id)">
-                                                <i class="icon-trash"></i>
-                                            </button>
-                                        </template>
-                                        <template v-else>
-                                            <button type="button" class="btn btn-info btn sm" @click="activarEmpleado(empleado.id)">
-                                                <i class="icon-check"></i>
-                                            </button>
-                                        </template>
 
                                     </td>
                                     <td v-text="persona.nombre"></td>
@@ -75,14 +64,7 @@
                                     <td v-text="persona.salario"></td>
                                     <td v-text="persona.fecha_inicio"></td>
                                     <td v-text="persona.dias_laborados"></td>
-                                    <td>
-                                        <div v-if="empleado.condicion">
-                                            <span class="badge badge-success">Activo</span>
-                                        </div>
-                                        <div v-else>
-                                            <span class="badge badge-danger">Inactivo</span>
-                                        </div>
-                                    </td>
+                                    
                                 </tr>                                
                             </tbody>
                         </table>
@@ -365,90 +347,6 @@
                 }).catch(function (error) {
                     console.log(error);
                 });
-            },
-            desactivarEmpleado(id){
-                const swalWithBootstrapButtons = swal.mixin({
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
-                })
-
-                swalWithBootstrapButtons({
-                title: 'Estas Seguro de Desactivar esta Mesa?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Si, desactivalo!',
-                cancelButtonText: 'No, cancelar!',
-                reverseButtons: true
-                }).then((result) => {
-                if (result.value) {
-                    let me =this;
-                    axios.put('/Empleado/desactivar', {
-                        'id': id
-                    }).then(function(response){
-                        me.listarPersona(1, '', 'nombre');
-                        swalWithBootstrapButtons(
-                            'Desactivado!',
-                            'El registro ha sido desactivado con éxito.',
-                            'success'
-                        )
-                    }).catch(function(error){
-                        console.log(error);
-                    });
-                    
-                } else if (
-                    // Read more about handling dismissals
-                    result.dismiss === swal.DismissReason.cancel
-                ) {
-                    swalWithBootstrapButtons(
-                    'Cancelado',
-                    'Tu registro sigue activo',
-                    'error'
-                    )
-                }
-                })
-            },
-            activarEmpleado(id){
-                const swalWithBootstrapButtons = swal.mixin({
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
-                })
-
-                swalWithBootstrapButtons({
-                title: 'Estas Seguro de Desactivar esta Mesa?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Si, activalo!',
-                cancelButtonText: 'No, cancelar!',
-                reverseButtons: true
-                }).then((result) => {
-                if (result.value) {
-                    let me =this;
-                    axios.put('/Empleado/activar', {
-                        'id': id
-                    }).then(function(response){
-                        me.listarPersona(1, '', 'nombre');
-                        swalWithBootstrapButtons(
-                            'Activado!',
-                            'El registro ha sido activado con éxito.',
-                            'success'
-                        )
-                    }).catch(function(error){
-                        console.log(error);
-                    });
-                    
-                } else if (
-                    // Read more about handling dismissals
-                    result.dismiss === swal.DismissReason.cancel
-                ) {
-                    swalWithBootstrapButtons(
-                    'Cancelado',
-                    'Tu registro sigue desactivado',
-                    'error'
-                    )
-                }
-                })
             },
             validarPersona(){
                 this.errorPersona=0;

@@ -43,5 +43,3 @@ Route::put('/Mesa/activar','MesaController@activar');
 Route::get('/Empleado','EmpleadoController@index');
 Route::post('/Empleado/registrar','EmpleadoController@store');
 Route::put('/Empleado/actualizar','EmpleadoController@update');
-Route::put('/Empleado/desactivar','EmpleadoController@desactivar');
-Route::put('/Empleado/activar','EmpleadoController@activar');

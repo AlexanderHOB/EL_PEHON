@@ -9,7 +9,7 @@
         <div class="card">
             <div class="card-header">
                 <i class="fa fa-align-justify"></i> Mesas
-                <button type="button" @click="abrirModal('mesa', 'registrar')" class="btn btn-secondary">
+                <button type="button" @click="abrirModal('mesas', 'registrar')" class="btn btn-secondary">
                     <i class="icon-plus"></i>&nbsp;Nuevo
                 </button>
             </div>
@@ -40,7 +40,7 @@
                     <tbody>
                         <tr v-for="mesa in arrayMesa" :key="mesa.id">
                             <td>
-                                <button type="button" @click="abrirModal('mesa', 'actualizar', mesa)" class="btn btn-warning btn-sm">
+                                <button type="button" @click="abrirModal('mesas', 'actualizar', mesa)" class="btn btn-warning btn-sm">
                                   <i class="icon-pencil"></i>
                                 </button> &nbsp;
                                 <template v-if="mesa.condicion">
@@ -367,7 +367,7 @@
             },
             abrirModal(modelo, accion, data = []){
                 switch(modelo){
-                    case "mesa":
+                    case "mesas":
                     {
                         switch(accion){
                             case 'registrar':

@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Persona;
 use Illuminate\Http\Request;
+use App\Persona;
 
 class ClienteController extends Controller
 {

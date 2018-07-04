@@ -53706,7 +53706,7 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _c("option", { attrs: { value: "tipo_empleado" } }, [
-                      _vm._v("Tipo")
+                      _vm._v("Tipo Empleado")
                     ]),
                     _vm._v(" "),
                     _c("option", { attrs: { value: "salario" } }, [
@@ -53794,7 +53794,7 @@ var render = function() {
                           [_c("i", { staticClass: "icon-pencil" })]
                         ),
                         _vm._v("  \n                                "),
-                        _vm.empleado.condicion
+                        persona.condicion
                           ? [
                               _c(
                                 "button",
@@ -53803,7 +53803,7 @@ var render = function() {
                                   attrs: { type: "button" },
                                   on: {
                                     click: function($event) {
-                                      _vm.desactivarEmpleado(_vm.empleado.id)
+                                      _vm.desactivarEmpleado(persona.id)
                                     }
                                   }
                                 },
@@ -53818,7 +53818,7 @@ var render = function() {
                                   attrs: { type: "button" },
                                   on: {
                                     click: function($event) {
-                                      _vm.activarEmpleado(_vm.empleado.id)
+                                      _vm.activarEmpleado(persona.id)
                                     }
                                   }
                                 },
@@ -53870,7 +53870,7 @@ var render = function() {
                     }),
                     _vm._v(" "),
                     _c("td", [
-                      _vm.empleado.condicion
+                      persona.condicion
                         ? _c("div", [
                             _c("span", { staticClass: "badge badge-success" }, [
                               _vm._v("Activo")

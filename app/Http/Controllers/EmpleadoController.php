@@ -24,13 +24,13 @@ class EmpleadoController extends Controller
         if ($buscar == ''){
             $empleados=Empleado::join('personas','empleados.id','=','personas.id')
             ->select('personas.id','personas.nombre','personas.tipo_documento','personas.num_documento','personas.direccion','personas.celular','personas.email',
-            'empleados.tipo_empleado','empleados.salario','empleados.fecha_inicio','empleados.dias_laborados','empleados.condicion')
+            'empleados.tipo_empleado','empleados.salario','empleados.fecha_inicio','empleados.dias_laborados')
             ->orderBy('personas.id', 'desc')->paginate(5);
         }
         else{
             $empleados=Empleado::join('personas','empleados.id','=','persona.id')
             ->select('personas.id','personas.nombre','personas.tipo_documento','personas.num_documento','personas.direccion','personas.celular','personas.email',
-            'empleados.tipo_empleado','empleados.salario','empleados.fecha_inicio','empleados.dias_laborados','empleados.condicion')
+            'empleados.tipo_empleado','empleados.salario','empleados.fecha_inicio','empleados.dias_laborados')
             ->where($criterio, 'like','%'.$buscar.'%')
             ->orderBy('personas.id', 'desc')->pginate(5);
         }
@@ -74,7 +74,6 @@ class EmpleadoController extends Controller
             $empleado->salario=$request->salario;
             $empleado->fecha_inicio=$request->fecha_inicio;
             $empleado->dias_laborados=$request->dias_laborados;
-            $empleado->condicion='1';
             $empleado->id = $persona->id;
             $empleado->save();
 
@@ -113,7 +112,6 @@ class EmpleadoController extends Controller
             $empleado->salario=$request->salario;
             $empleado->fecha_inicio=$request->fecha_inicio;
             $empleado->dias_laborados=$request->dias_laborados;
-            $empleado->condicion='1';
             $empleado->save();
 
             DB::commit();
@@ -121,19 +119,5 @@ class EmpleadoController extends Controller
         } catch (Exception $e){
             DB::rollBack();
         }
-    }
-    public function desactivar(Request $request)
-    {
-        if (!$request->ajax()) return redirect('/');
-        $empleado = Empleado::findOrFail($request->id);
-        $empleado->condicion='0';
-        $empleado->save();
-    }
-    public function activar(Request $request)
-    {
-        if (!$request->ajax()) return redirect('/');
-        $empleado = Empleado::findOrFail($request->id);
-        $empleado->condicion='1';
-        $empleado->save();
     }
 }
