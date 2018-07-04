@@ -4,65 +4,46 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
 use App\Empleado;
 use App\Persona;
 
 class EmpleadoController extends Controller
 {
-    /**
-    * Display a listing of the resource.
-    *
-    * @return \Illuminate\Http\Response
-    */
-    public function index(Request $request)
+    public function index(Request $request )
     {
-        //if (!$request->ajax()) return redirect('/');
 
-        $buscar = $request->buscar;
-        $criterio = $request->criterio;
+        if(!$request->ajax()) return redirect('/');
 
-        if ($buscar == ''){
-            $empleados=Empleado::join('personas','empleados.id','=','personas.id')
-            ->select('personas.id','personas.nombre','personas.tipo_documento','personas.num_documento','personas.direccion','personas.celular','personas.email',
-            'empleados.tipo_empleado','empleados.salario','empleados.fecha_inicio','empleados.dias_laborados')
-            ->orderBy('personas.id', 'desc')->paginate(5);
+        $buscar= $request->buscar;
+        $criterio=$request->criterio;
+        if($buscar==''){
+            $personas = Empleado::join('personas','empleados.id','=','personas.id')
+            ->select('personas.id','personas.nombre','personas.tipo_documento','personas.num_documento','personas.direccion','personas.celular','personas.email','empleados.tipo_empleado','empleados.salario','empleados.fecha_inicio','empleados.dias_laborados','empleados.condicion')
+            ->orderBy('personas.id','desc')->paginate(5);
+        }else{
+            $personas= Empleado::join('personas','empleados.id','=','personas.id')
+            ->select('personas.id','personas.nombre','personas.tipo_documento','personas.num_documento','personas.direccion','personas.celular','personas.email','empleados.tipo_empleado','empleados.salario','empleados.fecha_inicio','empleados.dias_laborados','empleados.condicion')
+            ->where('personas.'.$criterio,'like','%'.$buscar.'%')
+            ->orderBy('personas.id','desc')->paginate(5);
         }
-        else{
-            $empleados=Empleado::join('personas','empleados.id','=','persona.id')
-            ->select('personas.id','personas.nombre','personas.tipo_documento','personas.num_documento','personas.direccion','personas.celular','personas.email',
-<<<<<<< HEAD
-            'empleados.tipo_empleado','empleados.salario','empleados.fecha_inicio','empleados.dias_laborados')
-            ->where($criterio, 'like','%'.$buscar.'%')
-            ->orderBy('personas.id', 'desc')->pginate(5);
-=======
-            'empleados.tipo_empleado','empleados.salario','empleados.fecha_inicio','empleados.dias_laborados','empleados.condicion')
-            ->where('personas'.$criterio, 'like','%'.$buscar.'%')
-            ->orderBy('personas.id', 'desc')->paginate(5);
->>>>>>> 8700e072751284091db0c1a28b61ee8c40250b4a
-        }
-        return[
-            'pagination'    =>[
-                'total'         =>$empleados->total(),
-                'current_page'  =>$empleados->currentPage(),
-                'per_page'      =>$empleados->perPage(),
-                'last_page'     =>$empleados->lastPage(),
-                'from'          =>$empleados->firstItem(),
-                'to'            =>$empleados->lastItem(),
+        
+        return [
+            'pagination' => [
+                'total' =>          $personas->total(),
+                'current_page'=>    $personas->currentPage(),
+                'per_page'=>        $personas->perPage(),
+                'last_page'=>       $personas->lastPage(),
+                'from' =>           $personas->firstItem(),
+                'to' =>             $personas->lastItem()
             ],
-            'empleados' =>  $empleados
+            'personas' => $personas
         ];
+        
     }
-
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        if(!$request->ajax()) return redirect('/');
 
         try{
             DB::beginTransaction();
@@ -76,10 +57,11 @@ class EmpleadoController extends Controller
             $persona->save();
 
             $empleado = new Empleado();
-            $empleado->tipo_empleado=$request->tipo_empleado;
-            $empleado->salario=$request->salario;
-            $empleado->fecha_inicio=$request->fecha_inicio;
-            $empleado->dias_laborados=$request->dias_laborados;
+            $empleado->tipo_empleado = $request->tipo_empleado;
+            $empleado->salario = $request->salario;
+            $empleado->fecha_inicio = $request->fecha_inicio;
+            $empleado->dias_laborados = $request->dias_laborados;
+            $empleado->condicion='1';
             $empleado->id = $persona->id;
             $empleado->save();
 
@@ -88,23 +70,20 @@ class EmpleadoController extends Controller
         } catch (Exception $e){
             DB::rollBack();
         }
-    }
+        
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    }
     public function update(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        if(!$request->ajax()) return redirect('/');
 
         try{
             DB::beginTransaction();
+
+            //Buscar primero el empleado a modificar
             $empleado = Empleado::findOrFail($request->id);
-            $persona = Persona::findOrFail($empleado->id);
+
+            $persona = Persona::findOrFail($request->id);
 
             $persona->nombre=$request->nombre;
             $persona->tipo_documento=$request->tipo_documento;
@@ -114,10 +93,11 @@ class EmpleadoController extends Controller
             $persona->email=$request->email;
             $persona->save();
 
-            $empleado->tipo_empleado=$request->tipo_empleado;
-            $empleado->salario=$request->salario;
-            $empleado->fecha_inicio=$request->fecha_inicio;
-            $empleado->dias_laborados=$request->dias_laborados;
+            $empleado->tipo_empleado = $request->tipo_empleado;
+            $empleado->salario = $request->salario;
+            $empleado->fecha_inicio = $request->fecha_inicio;
+            $empleado->dias_laborados = $request->dias_laborados;
+            $empleado->condicion='1';
             $empleado->save();
 
             DB::commit();
@@ -125,5 +105,19 @@ class EmpleadoController extends Controller
         } catch (Exception $e){
             DB::rollBack();
         }
+    }
+    public function desactivar(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+        $empleado = Empleado::findOrFail($request->id);
+        $empleado->condicion='0';
+        $empleado->save();
+    }
+    public function activar(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+        $empleado = Empleado::findOrFail($request->id);
+        $empleado->condicion='1';
+        $empleado->save();
     }
 }

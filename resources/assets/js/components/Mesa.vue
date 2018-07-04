@@ -315,7 +315,7 @@
                 })
 
                 swalWithBootstrapButtons({
-                title: 'Estas Seguro de Desactivar esta Mesa?',
+                title: 'Estas Seguro de Activar esta Mesa?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Si, activalo!',

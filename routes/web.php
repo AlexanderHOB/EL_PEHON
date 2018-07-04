@@ -40,6 +40,8 @@ Route::put('/Mesa/actualizar','MesaController@update');
 Route::put('/Mesa/desactivar','MesaController@desactivar');
 Route::put('/Mesa/activar','MesaController@activar');
 //Empleados
-Route::get('/Empleado','EmpleadoController@index');
-Route::post('/Empleado/registrar','EmpleadoController@store');
-Route::put('/Empleado/actualizar','EmpleadoController@update');
+Route::get('/empleado','EmpleadoController@index');
+Route::post('/empleado/registrar','EmpleadoController@store');
+Route::put('/empleado/actualizar','EmpleadoController@update');
+Route::put('/empleado/desactivar','EmpleadoController@desactivar');
+Route::put('/empleado/activar','EmpleadoController@activar');

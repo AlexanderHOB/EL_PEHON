@@ -40,10 +40,11 @@
                                     <th>Direccion</th>
                                     <th>Celular</th>
                                     <th>Email</th>
-                                    <th>Tipo</th>
+                                    <th>Tipo Empleado</th>
                                     <th>Salario</th>
                                     <th>Fecha Contrato</th>
-                                    <th>Días Laborados</th>
+                                    <th>Dias Laborados</th>
+                                    <th>Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -52,9 +53,7 @@
                                         <button type="button" @click="abrirModal('personas','actualizar',persona)" class="btn btn-warning btn-sm">
                                           <i class="icon-pencil"></i>
                                         </button> &nbsp;
-<<<<<<< HEAD
-=======
-                                        <template v-if="empleado.condicion">
+                                        <template v-if="persona.condicion">
                                             <button type="button" class="btn btn-danger btn sm" @click="desactivarEmpleado(persona.id)">
                                                 <i class="icon-trash"></i>
                                             </button>
@@ -64,8 +63,6 @@
                                                 <i class="icon-check"></i>
                                             </button>
                                         </template>
->>>>>>> 8700e072751284091db0c1a28b61ee8c40250b4a
-
                                     </td>
                                     <td v-text="persona.nombre"></td>
                                     <td v-text="persona.tipo_documento"></td>
@@ -77,7 +74,14 @@
                                     <td v-text="persona.salario"></td>
                                     <td v-text="persona.fecha_inicio"></td>
                                     <td v-text="persona.dias_laborados"></td>
-                                    
+                                    <td>
+                                        <div v-if="persona.condicion">
+                                            <span class="badge badge-success">Activo</span>
+                                        </div>
+                                        <div v-else>
+                                            <span class="badge badge-danger">Inactivo</span>
+                                        </div>
+                                    </td>
                                 </tr>                                
                             </tbody>
                         </table>
@@ -150,35 +154,35 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="email-input">Email</label>
+                                    <label class="col-md-3 form-control-label" for="text-input">Email</label>
                                     <div class="col-md-9">
                                         <input type="email" v-model="email" class="form-control" placeholder="email">
                                         
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="email-input">Tipo de Empleado</label>
+                                    <label class="col-md-3 form-control-label" for="text-input">Tipo Empleado</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="tipo_empleado" class="form-control" placeholder="Tipo del Empleado">
                                         
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="email-input">Salario</label>
+                                    <label class="col-md-3 form-control-label" for="text-input">Salario</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="salario" class="form-control" placeholder="Salario del Empleado">
                                         
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="email-input">Fecha Contrato</label>
+                                    <label class="col-md-3 form-control-label" for="text-input">Fecha Contrato</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="fecha_inicio" class="form-control" placeholder="Fecha de Contrato del Empleado">
                                         
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="email-input">Días Laborados</label>
+                                    <label class="col-md-3 form-control-label" for="text-input">Días Laborados</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="dias_laborados" class="form-control" placeholder="Días Laborados por el Empleado">
                                         
@@ -210,13 +214,13 @@
                 <div class="modal-dialog modal-danger" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title">Eliminar Categoría</h4>
+                            <h4 class="modal-title">Eliminar Empleado</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">×</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p>Estas seguro de eliminar la categoría?</p>
+                            <p>Estas seguro de eliminar al Empleado?</p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -243,9 +247,9 @@
                 celular:'',
                 email:'',
                 tipo_empleado:'',
-                salario:0,
-                fecha_inicio:'2018-07-09',
-                dias_laborados:0,            
+                salario:'',
+                fecha_inicio:'',
+                dias_laborados:'',               
                 arrayPersona : [],
                 modal : 0,
                 tituloModal : '',
@@ -291,10 +295,9 @@
             }
         },
         methods : {
-            
-             listarPersona (page,buscar,criterio){
+            listarPersona (page,buscar,criterio){
                 let me=this;
-                var url='/Empleado?page='+page+'&buscar='+buscar+'&criterio='+criterio;
+                var url='/empleado?page='+page+'&buscar='+buscar+'&criterio='+criterio;
                 axios.get(url).then(function (response) {
                     var respuesta=response.data;
                     me.arrayPersona=respuesta.personas.data;
@@ -318,7 +321,7 @@
                 
                 let me = this;
 
-                axios.post('/Empleado/registrar',{
+                axios.post('/empleado/registrar',{
                     'nombre': this.nombre,
                     'tipo_documento':this.tipo_documento,
                     'num_documento':this.num_documento,
@@ -343,7 +346,7 @@
                 
                 let me = this;
 
-                axios.put('/Empleado/actualizar',{
+                axios.put('/empleado/actualizar',{
                     'nombre': this.nombre,
                     'tipo_documento':this.tipo_documento,
                     'num_documento':this.num_documento,
@@ -361,6 +364,90 @@
                 }).catch(function (error) {
                     console.log(error);
                 });
+            },
+            desactivarEmpleado(id){
+                const swalWithBootstrapButtons = swal.mixin({
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+                })
+
+                swalWithBootstrapButtons({
+                title: 'Estas Seguro de Desactivar este Empleado?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Si, desactivalo!',
+                cancelButtonText: 'No, cancelar!',
+                reverseButtons: true
+                }).then((result) => {
+                if (result.value) {
+                    let me =this;
+                    axios.put('/empleado/desactivar', {
+                        'id': id
+                    }).then(function(response){
+                        me.listarPersona(1, '', 'nombre');
+                        swalWithBootstrapButtons(
+                            'Desactivado!',
+                            'El registro ha sido desactivado con éxito.',
+                            'success'
+                        )
+                    }).catch(function(error){
+                        console.log(error);
+                    });
+                    
+                } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons(
+                    'Cancelado',
+                    'Tu registro sigue activo',
+                    'error'
+                    )
+                }
+                })
+            },
+            activarEmpleado(id){
+                const swalWithBootstrapButtons = swal.mixin({
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+                })
+
+                swalWithBootstrapButtons({
+                title: 'Estas Seguro de Activar este Empleado?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Si, activalo!',
+                cancelButtonText: 'No, cancelar!',
+                reverseButtons: true
+                }).then((result) => {
+                if (result.value) {
+                    let me =this;
+                    axios.put('/empleado/activar', {
+                        'id': id
+                    }).then(function(response){
+                        me.listarPersona(1, '', 'nombre');
+                        swalWithBootstrapButtons(
+                            'Activado!',
+                            'El registro ha sido activado con éxito.',
+                            'success'
+                        )
+                    }).catch(function(error){
+                        console.log(error);
+                    });
+                    
+                } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons(
+                    'Cancelado',
+                    'Tu registro sigue desactivado',
+                    'error'
+                    )
+                }
+                })
             },
             validarPersona(){
                 this.errorPersona=0;
@@ -382,9 +469,9 @@
                 this.celular='';
                 this.email='';
                 this.tipo_empleado='';
-                this.salario=0;
+                this.salario='';
                 this.fecha_inicio='';
-                this.dias_laborados=0;
+                this.dias_laborados='';
                 this.errorPersona=0;
             },
             abrirModal(modelo, accion, data = []){
@@ -403,9 +490,9 @@
                                 this.celular='';
                                 this.email='';
                                 this.tipo_empleado='';
-                                this.salario=0;
+                                this.salario='';
                                 this.fecha_inicio='';
-                                this.dias_laborados=0;
+                                this.dias_laborados='';
                                 this.tipoAccion = 1;
                                 break;
                             }
@@ -413,7 +500,7 @@
                             {
                                 console.log(data);
                                 this.modal=1;
-                                this.tituloModal='Actualizar Empleado';
+                                this.tituloModal='Actualizar Cliente';
                                 this.tipoAccion=2;
                                 this.persona_id=data['id'];
                                 this.nombre=data['nombre'];

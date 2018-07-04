@@ -14,15 +14,12 @@ class CreateEmpleadosTable extends Migration
     public function up()
     {
         Schema::create('empleados', function (Blueprint $table) {
-<<<<<<< HEAD
             $table->integer('id')->unsigned();
-=======
-            $table->integer('id');
->>>>>>> 8700e072751284091db0c1a28b61ee8c40250b4a
             $table->string('tipo_empleado',50);
-            $table->double('salario',8,2);
+            $table->decimal('salario',11,2);
             $table->date('fecha_inicio');
             $table->integer('dias_laborados');
+            $table->boolean('condicion')->default(1);
 
             $table->foreign('id')->references('id')->on('personas')->onDelete('cascade');
         });
