@@ -53358,9 +53358,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             celular: '',
             email: '',
             tipo_empleado: '',
-            salario: '',
-            fecha_inicio: '',
-            dias_laborados: '',
+            salario: 0,
+            fecha_inicio: '2018-07-09',
+            dias_laborados: 0,
             arrayPersona: [],
             modal: 0,
             tituloModal: '',
@@ -53564,9 +53564,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.celular = '';
             this.email = '';
             this.tipo_empleado = '';
-            this.salario = '';
+            this.salario = 0;
             this.fecha_inicio = '';
-            this.dias_laborados = '';
+            this.dias_laborados = 0;
             this.errorPersona = 0;
         },
         abrirModal: function abrirModal(modelo, accion) {
@@ -53587,9 +53587,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                                     this.celular = '';
                                     this.email = '';
                                     this.tipo_empleado = '';
-                                    this.salario = '';
+                                    this.salario = 0;
                                     this.fecha_inicio = '';
-                                    this.dias_laborados = '';
+                                    this.dias_laborados = 0;
                                     this.tipoAccion = 1;
                                     break;
                                 }
@@ -53803,7 +53803,7 @@ var render = function() {
                                   attrs: { type: "button" },
                                   on: {
                                     click: function($event) {
-                                      _vm.desactivarEmpleado(_vm.empleado.id)
+                                      _vm.desactivarEmpleado(persona.id)
                                     }
                                   }
                                 },
@@ -53818,7 +53818,7 @@ var render = function() {
                                   attrs: { type: "button" },
                                   on: {
                                     click: function($event) {
-                                      _vm.activarEmpleado(_vm.empleado.id)
+                                      _vm.activarEmpleado(persona.id)
                                     }
                                   }
                                 },

@@ -16,7 +16,7 @@ class EmpleadoController extends Controller
     */
     public function index(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        //if (!$request->ajax()) return redirect('/');
 
         $buscar = $request->buscar;
         $criterio = $request->criterio;
@@ -31,8 +31,8 @@ class EmpleadoController extends Controller
             $empleados=Empleado::join('personas','empleados.id','=','persona.id')
             ->select('personas.id','personas.nombre','personas.tipo_documento','personas.num_documento','personas.direccion','personas.celular','personas.email',
             'empleados.tipo_empleado','empleados.salario','empleados.fecha_inicio','empleados.dias_laborados','empleados.condicion')
-            ->where($criterio, 'like','%'.$buscar.'%')
-            ->orderBy('personas.id', 'desc')->pginate(5);
+            ->where('personas'.$criterio, 'like','%'.$buscar.'%')
+            ->orderBy('personas.id', 'desc')->paginate(5);
         }
         return[
             'pagination'    =>[

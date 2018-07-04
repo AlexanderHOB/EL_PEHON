@@ -14,8 +14,7 @@ class CreateEmpleadosTable extends Migration
     public function up()
     {
         Schema::create('empleados', function (Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
+            $table->integer('id');
             $table->string('tipo_empleado',50);
             $table->double('salario',8,2);
             $table->date('fecha_inicio');
