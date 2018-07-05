@@ -174,11 +174,11 @@
                                         
                                     </div>
                                 </div>
-                                <div class="form-group row fj-date">
+                                <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Fecha Contrato</label>
-                                    
-                                        <input type="text" v-model="fecha_inicio" class="col-md-8 form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
-                                    
+                                    <div class="col-md-9">
+                                        <input type="date" v-model="fecha_inicio" class="form-control" placeholder="Fecha Contrato del Empleado">
+                                    </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Días Laborados</label>

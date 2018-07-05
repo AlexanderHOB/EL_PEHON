@@ -53824,7 +53824,7 @@ var render = function() {
                       ])
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "form-group row fj-date" }, [
+                    _c("div", { staticClass: "form-group row" }, [
                       _c(
                         "label",
                         {
@@ -53834,28 +53834,32 @@ var render = function() {
                         [_vm._v("Fecha Contrato")]
                       ),
                       _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.fecha_inicio,
-                            expression: "fecha_inicio"
-                          }
-                        ],
-                        staticClass: "col-md-8 form-control",
-                        attrs: { type: "text" },
-                        domProps: { value: _vm.fecha_inicio },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
+                      _c("div", { staticClass: "col-md-9" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.fecha_inicio,
+                              expression: "fecha_inicio"
                             }
-                            _vm.fecha_inicio = $event.target.value
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "date",
+                            placeholder: "Fecha Contrato del Empleado"
+                          },
+                          domProps: { value: _vm.fecha_inicio },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.fecha_inicio = $event.target.value
+                            }
                           }
-                        }
-                      }),
-                      _vm._m(2)
+                        })
+                      ])
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "form-group row" }, [
@@ -53979,7 +53983,7 @@ var render = function() {
       ]
     ),
     _vm._v(" "),
-    _vm._m(3)
+    _vm._m(2)
   ])
 }
 var staticRenderFns = [
@@ -54023,14 +54027,6 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Estado")])
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "input-group-addon" }, [
-      _c("i", { staticClass: "glyphicon glyphicon-th" })
     ])
   },
   function() {
