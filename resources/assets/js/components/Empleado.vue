@@ -174,12 +174,11 @@
                                         
                                     </div>
                                 </div>
-                                <div class="form-group row">
+                                <div class="form-group row fj-date">
                                     <label class="col-md-3 form-control-label" for="text-input">Fecha Contrato</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="fecha_inicio" class="form-control" placeholder="Fecha de Contrato del Empleado">
-                                        
-                                    </div>
+                                    
+                                        <input type="text" v-model="fecha_inicio" class="col-md-8 form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                                    
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Días Laborados</label>
@@ -524,6 +523,7 @@
             this.listarPersona(1,this.buscar,this.criterio);
         }
     }
+    
 </script>
 <style>    
     .modal-content{

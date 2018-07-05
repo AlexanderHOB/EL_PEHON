@@ -52832,7 +52832,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -53825,7 +53824,7 @@ var render = function() {
                       ])
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "form-group row" }, [
+                    _c("div", { staticClass: "form-group row fj-date" }, [
                       _c(
                         "label",
                         {
@@ -53835,32 +53834,28 @@ var render = function() {
                         [_vm._v("Fecha Contrato")]
                       ),
                       _vm._v(" "),
-                      _c("div", { staticClass: "col-md-9" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.fecha_inicio,
-                              expression: "fecha_inicio"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          attrs: {
-                            type: "text",
-                            placeholder: "Fecha de Contrato del Empleado"
-                          },
-                          domProps: { value: _vm.fecha_inicio },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.fecha_inicio = $event.target.value
-                            }
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.fecha_inicio,
+                            expression: "fecha_inicio"
                           }
-                        })
-                      ])
+                        ],
+                        staticClass: "col-md-8 form-control",
+                        attrs: { type: "text" },
+                        domProps: { value: _vm.fecha_inicio },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.fecha_inicio = $event.target.value
+                          }
+                        }
+                      }),
+                      _vm._m(2)
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "form-group row" }, [
@@ -53984,7 +53979,7 @@ var render = function() {
       ]
     ),
     _vm._v(" "),
-    _vm._m(2)
+    _vm._m(3)
   ])
 }
 var staticRenderFns = [
@@ -54028,6 +54023,14 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Estado")])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "input-group-addon" }, [
+      _c("i", { staticClass: "glyphicon glyphicon-th" })
     ])
   },
   function() {
