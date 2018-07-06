@@ -11,9 +11,9 @@
 |
 */
 
-Route::get('/', function () {
+Route::get('/main', function () {
     return view('contenido/contenido');
-});
+})->name('main');
 //Categorias Platillos
 Route::get('/CategoriaPlatillo','CategoriaPlatilloController@index');
 Route::post('/CategoriaPlatillo/registrar','CategoriaPlatilloController@store');
@@ -54,3 +54,7 @@ Route::put('/user/activar','UserController@activar');
 //Roles
 Route::get('/rol','RolController@index');
 Route::get('/rol/selectRol','RolController@selectRol');
+
+Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/','Auth\LoginController@showLoginForm');
+Route::post('/login','Auth\LoginController@login')->name('login');

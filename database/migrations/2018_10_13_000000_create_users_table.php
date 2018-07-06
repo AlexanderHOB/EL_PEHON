@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
 
             $table->string('usuario')->unique();
             $table->string('password');
-            $table->string('condicion')->default(1);
+            $table->boolean('condicion')->default(1);
 
             $table->integer('idrol')->unsigned();
             $table->foreign('idrol')->references('id')->on('roles');
