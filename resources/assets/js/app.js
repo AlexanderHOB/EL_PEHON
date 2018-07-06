@@ -21,7 +21,7 @@ Vue.component('platillo', require('./components/Platillo.vue'));
 Vue.component('cliente', require('./components/Cliente.vue'));
 Vue.component('empleado', require('./components/Empleado.vue'));
 Vue.component('rol', require('./components/Roles.vue'));
-
+Vue.component('user', require('./components/User.vue'));
 const app = new Vue({
     el: '#app',
     data :{

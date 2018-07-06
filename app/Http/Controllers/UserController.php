@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Persona;
+use App\Rol;
+use Illuminate\Support\Facades\DB;
 class UserController extends Controller
 {
     public function index(Request $request )
@@ -14,57 +17,115 @@ class UserController extends Controller
         $buscar= $request->buscar;
         $criterio=$request->criterio;
         if($buscar==''){
-            $categorias=CategoriaPlatillo::orderBy('id','desc')->paginate(5);
+            $personas = User::join('personas','users.id','=','personas.id')
+            ->join('roles','users.idrol','=','roles.id')
+            ->select('personas.id','personas.nombre','personas.tipo_documento','personas.num_documento',
+            'personas.direccion','personas.celular','personas.email','users.usuario',
+            'users.password','users.condicion','users.idrol','roles.nombre as rol')
+            ->orderBy('personas.id','desc')->paginate(5);
         }else{
-            $categorias= CategoriaPlatillo::where($criterio,'like','%'.$buscar.'%')->orderBy('id','desc')->paginate(3);
+            $personas= User::join('personas','users.id','=','personas.id')
+            ->join('roles','users.idrol','=','roles.id')
+            ->select('personas.id','personas.nombre','personas.tipo_documento','personas.num_documento',
+            'personas.direccion','personas.celular','personas.email','users.usuario',
+            'users.password','users.condicion','users.idrol','roles.nombre as rol')
+            ->where('personas.'.$criterio,'like','%'.$buscar.'%')
+            ->orderBy('personas.id','desc')->paginate(5);
         }
         
         return [
             'pagination' => [
-                'total' =>          $categorias->total(),
-                'current_page'=>    $categorias->currentPage(),
-                'per_page'=>        $categorias->perPage(),
-                'last_page'=>       $categorias->lastPage(),
-                'from' =>           $categorias->firstItem(),
-                'to' =>             $categorias->lastItem()
+                'total' =>          $personas->total(),
+                'current_page'=>    $personas->currentPage(),
+                'per_page'=>        $personas->perPage(),
+                'last_page'=>       $personas->lastPage(),
+                'from' =>           $personas->firstItem(),
+                'to' =>             $personas->lastItem()
             ],
-            'categorias' => $categorias
+            'personas' => $personas
         ];
         
     }
     public function store(Request $request)
     {
         if(!$request->ajax()) return redirect('/');
-        $categoria = new CategoriaPlatillo();
-        $categoria->nombre=$request->nombre;
-        $categoria->descripcion=$request->descripcion;
-        $categoria->condicion='1';
-        $categoria->save();
+
+        try{
+            DB::beginTransaction();
+            $persona = new Persona();
+            $persona->nombre=$request->nombre;
+            $persona->tipo_documento=$request->tipo_documento;
+            $persona->num_documento=$request->num_documento;
+            $persona->direccion=$request->direccion;
+            $persona->celular=$request->celular;
+            $persona->email=$request->email;
+            $persona->save();
+
+            $user = new User();
+            $user->usuario = $request->usuario;
+            $user->password = bcrypt($request->salario);
+            $user->condicion='1';
+            $user->idrol = $request->idrol;
+            
+            $user->id=$persona->id;
+
+            $user->save();
+
+            DB::commit();
+
+        } catch (Exception $e){
+            DB::rollBack();
+        }
+        
 
     }
-
-  
     public function update(Request $request)
     {
         if(!$request->ajax()) return redirect('/');
-        $categoria = CategoriaPlatillo::findOrFail($request->id);
-        $categoria->nombre=$request->nombre;
-        $categoria->descripcion=$request->descripcion;
-        $categoria->condicion='1';
-        $categoria->save();
+
+        try{
+            DB::beginTransaction();
+
+            //Buscar primero el empleado a modificar
+            $user = User::findOrFail($request->id);
+
+            $persona = Persona::findOrFail($user->id);
+
+            $persona->nombre=$request->nombre;
+            $persona->tipo_documento=$request->tipo_documento;
+            $persona->num_documento=$request->num_documento;
+            $persona->direccion=$request->direccion;
+            $persona->celular=$request->celular;
+            $persona->email=$request->email;
+            $persona->save();
+
+           
+            $user->usuario = $request->usuario;
+            $user->password = bcrypt($request->salario);
+            $user->condicion='1';
+            $user->idrol = $request->idrol;
+            $user->save();
+
+            DB::commit();
+
+        } catch (Exception $e){
+            DB::rollBack();
+        }
     }
     public function desactivar(Request $request)
     {
-        if(!$request->ajax()) return redirect('/');
-        $categoria = CategoriaPlatillo::findOrFail($request->id);
-        $categoria->condicion='0';
-        $categoria->save();
+        if (!$request->ajax()) return redirect('/');
+        $user = User::findOrFail($request->id);
+        $user->condicion = '0';
+        $user->save();
     }
+
     public function activar(Request $request)
     {
-        if(!$request->ajax()) return redirect('/');
-        $categoria = CategoriaPlatillo::findOrFail($request->id);
-        $categoria->condicion='1';
-        $categoria->save();
+        if (!$request->ajax()) return redirect('/');
+        $user = User::findOrFail($request->id);
+        $user->condicion = '1';
+        $user->save();
     }
+
 }

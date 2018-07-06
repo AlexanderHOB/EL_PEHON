@@ -83,7 +83,7 @@ class EmpleadoController extends Controller
             //Buscar primero el empleado a modificar
             $empleado = Empleado::findOrFail($request->id);
 
-            $persona = Persona::findOrFail($request->id);
+            $persona = Persona::findOrFail($empleado->id);
 
             $persona->nombre=$request->nombre;
             $persona->tipo_documento=$request->tipo_documento;

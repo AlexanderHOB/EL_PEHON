@@ -28,6 +28,9 @@
                             <li @click="menu=6" class="nav-item">
                                 <a class="nav-link" href="#"><i class="icon-bag"></i> Roles</a>
                             </li>
+                            <li @click="menu=7" class="nav-item">
+                                <a class="nav-link" href="#"><i class="icon-bag"></i> Usuarios</a>
+                            </li>
                         </ul>
                     </li>
                     <li class="nav-item nav-dropdown">

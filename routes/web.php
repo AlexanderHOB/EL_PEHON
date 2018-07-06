@@ -45,3 +45,12 @@ Route::post('/empleado/registrar','EmpleadoController@store');
 Route::put('/empleado/actualizar','EmpleadoController@update');
 Route::put('/empleado/desactivar','EmpleadoController@desactivar');
 Route::put('/empleado/activar','EmpleadoController@activar');
+//user
+Route::get('/user','UserController@index');
+Route::post('/user/registrar','UserController@store');
+Route::put('/user/actualizar','UserController@update');
+Route::put('/user/desactivar','UserController@desactivar');
+Route::put('/user/activar','UserController@activar');
+//Roles
+Route::get('/rol','RolController@index');
+Route::get('/rol/selectRol','RolController@selectRol');
