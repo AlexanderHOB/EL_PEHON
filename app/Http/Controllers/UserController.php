@@ -63,7 +63,7 @@ class UserController extends Controller
 
             $user = new User();
             $user->usuario = $request->usuario;
-            $user->password = bcrypt($request->salario);
+            $user->password = bcrypt($request->password);
             $user->condicion='1';
             $user->idrol = $request->idrol;
             
@@ -101,7 +101,7 @@ class UserController extends Controller
 
            
             $user->usuario = $request->usuario;
-            $user->password = bcrypt($request->salario);
+            $user->password = bcrypt($request->password);
             $user->condicion='1';
             $user->idrol = $request->idrol;
             $user->save();

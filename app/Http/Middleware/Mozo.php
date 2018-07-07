@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class Mozos
+class Mozo
 {
     /**
      * Handle an incoming request.
