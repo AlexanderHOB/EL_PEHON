@@ -14,10 +14,13 @@ class CreatePedidoPlatillosTable extends Migration
     public function up()
     {
         Schema::create('pedido_platillos', function (Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
+            $table->increments('id');          
+            $table->integer('idpedido')->unsigned();
+            $table->foreign('idpedido')->references('id')->on('pedidos')->onDelete('cascade');
+            $table->integer('idplatillo')->references('id')->on('platillos');
             $table->integer('cantidad');
-            $table->double('subtotal',8,2);
+            $table->double('precio',11,2);
+            $table->timestamps();
         });
     }
 
