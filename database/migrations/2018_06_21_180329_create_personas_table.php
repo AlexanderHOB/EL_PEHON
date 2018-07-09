@@ -17,7 +17,7 @@ class CreatePersonasTable extends Migration
             $table->increments('id');
             $table->string('nombre',120)->unique();
             $table->string('tipo_documento',20)->nullable();
-            $table->string('num_documento',8)->nullable();
+            $table->string('num_documento',11)->nullable();
             $table->string('direccion',70)->nullable();
             $table->string('celular',9)->nullable();
             $table->string('email',80)->nullable();

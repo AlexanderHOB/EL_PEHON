@@ -15,21 +15,26 @@
                             </li>
                             <li @click="menu=5" class="nav-item">
                                 <a class="nav-link" href="#"><i class="icon-bag"></i> Empleado</a>
-                            </li>
-                            
-                            
+                            </li>                           
                             
                         </ul>
                     </li>
                     <li class="nav-item nav-dropdown">
-                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-wallet"></i> Compras</a>
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-wallet"></i> Almacen </a>
                         <ul class="nav-dropdown-items">
-                            <li @click="menu=6" class="nav-item">
-                                <a class="nav-link" href="#"><i class="icon-wallet"></i> Ingresos</a>
+                            <li @click="menu=20" class="nav-item">
+                                        <a class="nav-link" href="#"><i class="icon-notebook"></i> Categorias</a>
                             </li>
-                            <li @click="menu=7" class="nav-item">
+                            <li @click="menu=21" class="nav-item">
+                                <a class="nav-link" href="#"><i class="icon-wallet"></i> Articulos</a>
+                            </li>
+                            <li @click="menu=22" class="nav-item">
                                 <a class="nav-link" href="#"><i class="icon-notebook"></i> Proveedores</a>
                             </li>
+                            <li @click="menu=23" class="nav-item">
+                                <a class="nav-link" href="#"><i class="icon-notebook"></i> Ingresos</a>
+                            </li>
+                            
                         </ul>
                     </li>
                     <li class="nav-item nav-dropdown">

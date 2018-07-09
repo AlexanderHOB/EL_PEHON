@@ -9,6 +9,9 @@ class Pedido extends Model
     protected $fillable=[
         'idempleado',
         'idusuario',
+        'tipo_comprobante',
+        'serie_comprobante',
+        'num_comprobante',
         'fecha_pedido',
         'impuesto',
         'total',

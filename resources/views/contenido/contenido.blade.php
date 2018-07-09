@@ -44,15 +44,24 @@
                 </template>
         
                 <template v-if="menu==10">
-                    <h1>Contenido del menú 10</h1>
+                    <pedido></pedido>
                 </template>
         
                 <template v-if="menu==11">
                     <h1>Contenido del menú 11</h1>
                 </template>
         
-                <template v-if="menu==12">
-                    <h1>Contenido del menú 12</h1>
+                <template v-if="menu==20">
+                    <categoria></categoria>
+                </template>
+                <template v-if="menu==21">
+                    <articulo><articulo>
+                </template>
+                <template v-if="menu==22">
+                    <proveedor></proveedor>
+                </template>
+                <template v-if="menu==23">
+                    <ingreso></ingreso>
                 </template>
                 
             @elseif (Auth::user()->idrol == 2)
