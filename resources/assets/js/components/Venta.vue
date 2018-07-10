@@ -8,13 +8,13 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Ingresos
+                        <i class="fa fa-align-justify"></i> Ventas
                         <button type="button" @click="mostrarDetalle()" class="btn btn-secondary">
                             <i class="icon-plus"></i>&nbsp;Nuevo
                         </button>
                     </div>
                     <!-- Listado-->
-                     <template v-if="listado==1">
+                    <template v-if="listado==1">
                     <div class="card-body">
                         <div class="form-group row">
                             <div class="col-md-6">
@@ -24,8 +24,8 @@
                                       <option value="num_comprobante">Número Comprobante</option>
                                       <option value="fecha_hora">Fecha-Hora</option>
                                     </select>
-                                    <input type="text" v-model="buscar" @keyup.enter="listarIngreso(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
-                                    <button type="submit" @click="listarIngreso(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                    <input type="text" v-model="buscar" @keyup.enter="listarVenta(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
+                                    <button type="submit" @click="listarVenta(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
@@ -35,7 +35,7 @@
                                     <tr>
                                         <th>Opciones</th>
                                         <th>Usuario</th>
-                                        <th>Proveedor</th>
+                                        <th>Cliente</th>
                                         <th>Tipo Comprobante</th>
                                         <th>Serie Comprobante</th>
                                         <th>Número Comprobante</th>
@@ -46,26 +46,26 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="ingreso in arrayIngreso" :key="ingreso.id">
+                                    <tr v-for="venta in arrayVenta" :key="venta.id">
                                         <td>
-                                            <button type="button" @click="verIngreso(ingreso.id)" class="btn btn-success btn-sm">
+                                            <button type="button" @click="verVenta(venta.id)" class="btn btn-success btn-sm">
                                             <i class="icon-eye"></i>
                                             </button> &nbsp;
-                                            <template v-if="ingreso.estado=='Registrado'">
-                                                <button type="button" class="btn btn-danger btn-sm" @click="desactivarIngreso(ingreso.id)">
+                                            <template v-if="venta.estado=='Registrado'">
+                                                <button type="button" class="btn btn-danger btn-sm" @click="desactivarVenta(venta.id)">
                                                     <i class="icon-trash"></i>
                                                 </button>
                                             </template>
                                         </td>
-                                        <td v-text="ingreso.usuario"></td>
-                                        <td v-text="ingreso.nombre"></td>
-                                        <td v-text="ingreso.tipo_comprobante"></td>
-                                        <td v-text="ingreso.serie_comprobante"></td>
-                                        <td v-text="ingreso.num_comprobante"></td>
-                                        <td v-text="ingreso.fecha_hora"></td>
-                                        <td v-text="ingreso.total"></td>
-                                        <td v-text="ingreso.impuesto"></td>
-                                        <td v-text="ingreso.estado"></td>
+                                        <td v-text="venta.usuario"></td>
+                                        <td v-text="venta.nombre"></td>
+                                        <td v-text="venta.tipo_comprobante"></td>
+                                        <td v-text="venta.serie_comprobante"></td>
+                                        <td v-text="venta.num_comprobante"></td>
+                                        <td v-text="venta.fecha_hora"></td>
+                                        <td v-text="venta.total"></td>
+                                        <td v-text="venta.impuesto"></td>
+                                        <td v-text="venta.estado"></td>
                                     </tr>                                
                                 </tbody>
                             </table>
@@ -203,15 +203,15 @@
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
                                             <td colspan="4" align="right"><strong>Total Parcial:</strong></td>
-                                            <td>S/. {{totalParcial=(total-totalImpuesto).toFixed(2)}}</td>
+                                            <td>$ {{totalParcial=(total-totalImpuesto).toFixed(2)}}</td>
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
                                             <td colspan="4" align="right"><strong>Total Impuesto:</strong></td>
-                                            <td>S/. {{totalImpuesto=((total*impuesto)/(1+impuesto)).toFixed(2)}}</td>
+                                            <td>$ {{totalImpuesto=((total*impuesto)/(1+impuesto)).toFixed(2)}}</td>
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
                                             <td colspan="4" align="right"><strong>Total Neto:</strong></td>
-                                            <td>S/. {{total=calcularTotal}}</td>
+                                            <td>$ {{total=calcularTotal}}</td>
                                         </tr>
                                     </tbody>
                                     <tbody v-else>
@@ -233,7 +233,7 @@
                     </div>
                     </template>
                     <!-- Fin Detalle-->
-                    <!-- Ver Ingreso-->
+                    <!-- Ver ingreso -->
                     <template v-else-if="listado==2">
                     <div class="card-body">
                         <div class="form-group row border">
@@ -245,7 +245,7 @@
                             </div>
                             <div class="col-md-3">
                                 <label for="">Impuesto</label>
-                                    <p v-text="impuesto"></p>
+                                <p v-text="impuesto"></p>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -261,11 +261,10 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Número Comprobante(*)</label>
+                                    <label>Número Comprobante</label>
                                     <p v-text="num_comprobante"></p>
                                 </div>
                             </div>
-                            
                         </div>
                         <div class="form-group row border">
                             <div class="table-responsive col-md-12">
@@ -283,10 +282,8 @@
                                             <td v-text="detalle.articulo">
                                             </td>
                                             <td v-text="detalle.precio">
-                                                
                                             </td>
                                             <td v-text="detalle.cantidad">
-
                                             </td>
                                             <td>
                                                 {{detalle.precio*detalle.cantidad}}
@@ -294,15 +291,15 @@
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
                                             <td colspan="3" align="right"><strong>Total Parcial:</strong></td>
-                                            <td>S/. {{totalParcial=(total-totalImpuesto).toFixed(2)}}</td>
+                                            <td>$ {{totalParcial=(total-totalImpuesto).toFixed(2)}}</td>
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
                                             <td colspan="3" align="right"><strong>Total Impuesto:</strong></td>
-                                            <td>S/. {{totalImpuesto=((total*impuesto)).toFixed(2)}}</td>
+                                            <td>$ {{totalImpuesto=((total*impuesto)).toFixed(2)}}</td>
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
                                             <td colspan="3" align="right"><strong>Total Neto:</strong></td>
-                                            <td>S/. {{total}}</td>
+                                            <td>$ {{total}}</td>
                                         </tr>
                                     </tbody>
                                     <tbody v-else>
@@ -318,11 +315,12 @@
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>
+                                
                             </div>
                         </div>
                     </div>
                     </template>
-                    <!-- fin de ver Ingreso-->
+                    <!-- fin ver ingreso -->
                 </div>
                 <!-- Fin ejemplo de tabla Listado -->
             </div>
@@ -408,10 +406,9 @@
     export default {
         data (){
             return {
-                ingreso_id: 0,
-                idproveedor:0,
-                proveedor:'',
-                nombre : '',
+                venta_id: 0,
+                idcliente:0,
+                cliente:'',
                 tipo_comprobante : 'BOLETA',
                 serie_comprobante : '',
                 num_comprobante : '',
@@ -419,15 +416,15 @@
                 total:0.0,
                 totalImpuesto: 0.0,
                 totalParcial: 0.0,
-                arrayIngreso : [],
-                arrayProveedor: [],
+                arrayVenta : [],
+                arrayCliente: [],
                 arrayDetalle : [],
                 listado:1,
                 modal : 0,
                 tituloModal : '',
                 tipoAccion : 0,
-                errorIngreso : 0,
-                errorMostrarMsjIngreso : [],
+                errorVenta : 0,
+                errorMostrarMsjVenta : [],
                 pagination : {
                     'total' : 0,
                     'current_page' : 0,
@@ -488,12 +485,12 @@
             }
         },
         methods : {
-            listarIngreso (page,buscar,criterio){
+            listarVenta (page,buscar,criterio){
                 let me=this;
-                var url= '/ingreso?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
+                var url= '/venta?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
                 axios.get(url).then(function (response) {
                     var respuesta= response.data;
-                    me.arrayIngreso = respuesta.ingresos.data;
+                    me.arrayVenta = respuesta.ventas.data;
                     me.pagination= respuesta.pagination;
                 })
                 .catch(function (error) {
@@ -547,7 +544,7 @@
                 //Actualiza la página actual
                 me.pagination.current_page = page;
                 //Envia la petición para visualizar la data de esa página
-                me.listarIngreso(page,buscar,criterio);
+                me.listarVenta(page,buscar,criterio);
             },
             encuentra(id){
                 var sw=0;
@@ -693,13 +690,16 @@
             verIngreso(id){
                 let me=this;
                 me.listado=2;
-                // obtener los datos de ingreso
+                
+                //Obtener los datos del ingreso
                 var arrayIngresoT=[];
-                var url= '/ingreso/obtenerCabecera?id='+id ;
+                var url= '/ingreso/obtenerCabecera?id=' + id;
+                
                 axios.get(url).then(function (response) {
                     var respuesta= response.data;
                     arrayIngresoT = respuesta.ingreso;
-                    me.proveedor=arrayIngresoT[0]['nombre'];
+
+                    me.proveedor = arrayIngresoT[0]['nombre'];
                     me.tipo_comprobante=arrayIngresoT[0]['tipo_comprobante'];
                     me.serie_comprobante=arrayIngresoT[0]['serie_comprobante'];
                     me.num_comprobante=arrayIngresoT[0]['num_comprobante'];
@@ -709,21 +709,23 @@
                 .catch(function (error) {
                     console.log(error);
                 });
-                //obtener los datos de detalles
-                var url= '/ingreso/obtenerDetalles?id='+id ;
-                axios.get(url).then(function (response) {
+
+                //Obtener los datos de los detalles 
+                var urld= '/ingreso/obtenerDetalles?id=' + id;
+                
+                axios.get(urld).then(function (response) {
+                    console.log(response);
                     var respuesta= response.data;
                     me.arrayDetalle = respuesta.detalles;
-                   
                 })
                 .catch(function (error) {
                     console.log(error);
-                });
+                });               
             },
             cerrarModal(){
                 this.modal=0;
                 this.tituloModal='';
-            },
+            }, 
             abrirModal(){               
                 this.arrayArticulo=[];
                 this.modal = 1;
@@ -751,8 +753,8 @@
                     }).then(function (response) {
                         me.listarIngreso(1,'','num_comprobante');
                         swal(
-                        'Desactivado!',
-                        'El Ingreso ha sido anulado con éxito.',
+                        'Anulado!',
+                        'El ingreso ha sido anulado con éxito.',
                         'success'
                         )
                     }).catch(function (error) {
@@ -770,7 +772,7 @@
             },
         },
         mounted() {
-            this.listarIngreso(1,this.buscar,this.criterio);
+            this.listarVenta(1,this.buscar,this.criterio);
         }
     }
 </script>

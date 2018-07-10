@@ -44,7 +44,7 @@
                 </template>
         
                 <template v-if="menu==10">
-                    <pedido></pedido>
+                    <venta></venta>
                 </template>
         
                 <template v-if="menu==11">

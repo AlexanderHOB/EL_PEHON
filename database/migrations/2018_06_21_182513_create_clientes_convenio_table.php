@@ -14,12 +14,12 @@ class CreateClientesConvenioTable extends Migration
     public function up()
     {
         Schema::create('clientes_convenio', function (Blueprint $table) {
-            $table->increments('id');
+            $table->integer('id')->unsigned();
             $table->timestamps();
             $table->string('tipo_contrato',50);
-            $table->double('saldo',8,2);
+            $table->double('saldo',11,2);
             $table->string('distrito',50);
-    
+            $table->foreign('id')->references('id')->on('personas')->onDelete('cascade');
         });
     }
 

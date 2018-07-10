@@ -50,6 +50,8 @@ Route::group(['middleware'=>['auth']],function(){
         Route::put('/articulo/actualizar', 'ArticuloController@update');
         Route::put('/articulo/desactivar', 'ArticuloController@desactivar');
         Route::put('/articulo/activar', 'ArticuloController@activar');
+        Route::get('/articulo/buscarArticulo','ArticuloController@buscarArticulo');
+        Route::get('/articulo/listarArticulo','ArticuloController@listarArticulo');
         //Platillos
         Route::get('/platillo','PlatilloController@index');
         Route::post('/platillo/registrar','PlatilloController@store');
@@ -82,8 +84,16 @@ Route::group(['middleware'=>['auth']],function(){
         Route::put('/user/activar','UserController@activar');
         //Ingreso
         Route::get('/ingreso', 'IngresoController@index');
-        Route::get('/ingreso/registrar', 'IngresoController@store');
-        Route::get('/ingreso/desactivar', 'IngresoController@desactivar');
+        Route::post('/ingreso/registrar', 'IngresoController@store');
+        Route::put('/ingreso/desactivar', 'IngresoController@desactivar');
+        Route::get('/ingreso/obtenerCabecera', 'IngresoController@obtenerCabecera');
+        Route::get('/ingreso/obtenerDetalles', 'IngresoController@obtenerDetalles');
+        //Ventas
+        Route::get('/venta', 'VentaController@index');
+        Route::post('/venta/registrar', 'VentaController@store');
+        Route::put('/venta/desactivar', 'VentaController@desactivar');
+        Route::get('/venta/obtenerCabecera', 'VentaController@obtenerCabecera');
+        Route::get('/venta/obtenerDetalles', 'VentaController@obtenerDetalles');
     });
     Route::group(['middleware'=>['Caja']],function(){
         //Clientes
