@@ -51,7 +51,10 @@ Route::group(['middleware'=>['auth']],function(){
         Route::put('/articulo/desactivar', 'ArticuloController@desactivar');
         Route::put('/articulo/activar', 'ArticuloController@activar');
         Route::get('/articulo/buscarArticulo','ArticuloController@buscarArticulo');
+        Route::get('/articulo/buscarArticuloVenta','ArticuloController@buscarArticuloVenta');
         Route::get('/articulo/listarArticulo','ArticuloController@listarArticulo');
+        Route::get('/articulo/listarArticuloVenta','ArticuloController@listarArticuloVenta');
+        Route::get('/articulo/listarPdf','ArticuloController@listarPdf')->name('articulos_pdf');
         //Platillos
         Route::get('/platillo','PlatilloController@index');
         Route::post('/platillo/registrar','PlatilloController@store');
@@ -71,6 +74,7 @@ Route::group(['middleware'=>['auth']],function(){
         Route::get('/cliente','ClienteController@index');
         Route::post('/cliente/registrar','ClienteController@store');
         Route::put('/cliente/actualizar','ClienteController@update');
+        Route::get('/cliente/selectCliente','ClienteController@selectCliente');
         //Proveedores
         Route::get('/proveedor', 'ProveedorController@index');
         Route::post('/proveedor/registrar', 'ProveedorController@store');
@@ -94,12 +98,17 @@ Route::group(['middleware'=>['auth']],function(){
         Route::put('/venta/desactivar', 'VentaController@desactivar');
         Route::get('/venta/obtenerCabecera', 'VentaController@obtenerCabecera');
         Route::get('/venta/obtenerDetalles', 'VentaController@obtenerDetalles');
+        Route::get('/venta/pdf/{id}', 'VentaController@pdf')->name('venta_pdf');
     });
     Route::group(['middleware'=>['Caja']],function(){
         //Clientes
         Route::get('/cliente','ClienteController@index');
         Route::post('/cliente/registrar','ClienteController@store');
         Route::put('/cliente/actualizar','ClienteController@update');
+        Route::get('/cliente/selectCliente','ClienteController@selectCliente');
+        //Route::get('/articulo/listarPdf','ArticuloController@listarPdf')->name('articulos_pdf');
+
+        
     });
     Route::group(['middleware'=>['Mozo']],function(){    
     });
