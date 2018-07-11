@@ -66440,6 +66440,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 me.codigo = '';
                 me.descuento = 0;
                 me.arrayDetalle = [];
+                window.open('http://127.0.0.1:8000/venta/pdf/' + response.data.id + ',' + '_blank');
             }).catch(function (error) {
                 console.log(error);
             });
