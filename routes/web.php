@@ -22,7 +22,9 @@ Route::group(['middleware'=>['auth']],function(){
     })->name('main');
     
     Route::post('/logout','Auth\LoginController@logout')->name('logout');
-
+    Route::get('dashboard','DashboardController');
+    //Notificaciones
+    Route::post('/notification/get','NotificationController@get');
     Route::group(['middleware'=>['Administrador']],function(){
         //Empleados
         Route::get('/empleado','EmpleadoController@index');

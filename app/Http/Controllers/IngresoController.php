@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use App\Ingreso;
-use App\DetalleIngreso;
+use App\{Ingreso,DetalleIngreso,User};
+use App\Notifications\NotifyAdmin;
 class IngresoController extends Controller
 {
     public function index(Request $request)
@@ -107,7 +107,25 @@ class IngresoController extends Controller
                 $detalle->precio = $det['precio'];          
                 $detalle->save();
             }          
- 
+            $fechaActual=date('Y-m-d');
+            $numVentas=DB::table('ventas')->whereDate('created_at',$fechaActual)->count();
+            $numIngresos=DB::table('ingresos')->whereDate('created_at',$fechaActual)->count();
+            
+            $arregloDatos=[
+                'ventas'=>[
+                    'numero'=>$numVentas,
+                    'msj'=>'Ventas'
+                ],
+                'ingresos'=>[
+                    'numero'=>$numIngresos,
+                    'msj'=>'Ingresos'
+                ]
+            ];
+            $allUsers=User::all();
+            foreach($allUsers as $notificar){
+                User::findOrFail($notificar->id)->notify(new NotifyAdmin($arregloDatos));
+            }
+
             DB::commit();
         } catch (Exception $e){
             DB::rollBack();
