@@ -2375,7 +2375,7 @@ module.exports = __webpack_require__(28);
  */
 
 __webpack_require__(29);
-
+window.$ = window.jQuery = __webpack_require__(33);
 window.Vue = __webpack_require__(56);
 
 /**
@@ -2415,6 +2415,11 @@ var app = new Vue({
             me.notifications = response.data;
         }).catch(function (error) {
             console.log(error);
+        });
+        var userId = $('meta[name="userId"]').attr('content');
+
+        Echo.private('App.User.' + userId).notification(function (notification) {
+            me.notifications.unshift(notification);
         });
     }
 });
@@ -76026,11 +76031,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['notifications'],
     data: function data() {
-        return {};
+        return {
+            arrayNotifications: []
+        };
+    },
+
+    computed: {
+        listar: function listar() {
+            //return this.notifications[0];
+            this.arrayNotifications = Object.values(this.notifications[0]);
+            if (this.notifications == '') {
+                return this.arrayNotifications = [];
+            } else {
+                //Capturo la ultima notificación agregada 
+                this.arrayNotifications = Object.values(this.notifications[0]);
+                //Validación por indice fuera de rango
+                if (this.arrayNotifications.length > 3) {
+                    //Si el tamaño es > 3 Es cuando las notificaciones son obtenidas desde el mismo servidor, es decir por la consulta con AXIOS 
+                    return Object.values(this.arrayNotifications[4]);
+                } else {
+                    //Si el tamaño es < 3 Es cuando las notificaciones son obtenidas desde el canal privado, es decir mediante Laravel Echo y Pusher 
+                    return Object.values(this.arrayNotifications[0]);
+                }
+            }
+        }
     }
 });
 
@@ -76043,52 +76075,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("li", { staticClass: "nav-item d-md-down-none" }, [
-    _vm._m(0),
-    _vm._v(" "),
     _c(
-      "div",
-      { staticClass: "dropdown-menu dropdown-menu-right" },
-      [
-        _vm._m(1),
-        _vm._v(" "),
-        _vm._l(_vm.notifications, function(item) {
-          return _c("li", { key: item.id }, [
-            _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
-              _c("i", { staticClass: "fa fa-envelope-o" }),
-              _vm._v(
-                " " +
-                  _vm._s(JSON.parse(item.data).datos.ingresos.msj) +
-                  "\n                    "
-              ),
-              _c("span", { staticClass: "badge badge-success" }, [
-                _vm._v(_vm._s(JSON.parse(item.data).datos.ingresos.numero))
-              ])
-            ]),
-            _vm._v(" "),
-            _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
-              _c("i", { staticClass: "fa fa-tasks" }),
-              _vm._v(
-                " " +
-                  _vm._s(JSON.parse(item.data).datos.ventas.msj) +
-                  "\n                    "
-              ),
-              _c("span", { staticClass: "badge badge-danger" }, [
-                _vm._v(_vm._s(JSON.parse(item.data).datos.ventas.numero))
-              ])
-            ])
-          ])
-        })
-      ],
-      2
-    )
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
       "a",
       {
         staticClass: "nav-link",
@@ -76098,11 +76085,50 @@ var staticRenderFns = [
         _c("i", { staticClass: "icon-bell" }),
         _vm._v(" "),
         _c("span", { staticClass: "badge badge-pill badge-danger" }, [
-          _vm._v("5")
+          _vm._v(_vm._s(_vm.notifications.length))
         ])
       ]
-    )
-  },
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "dropdown-menu dropdown-menu-right" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _vm.notifications.length
+        ? _c(
+            "div",
+            _vm._l(_vm.listar, function(item) {
+              return _c("li", { key: item.id }, [
+                _c(
+                  "a",
+                  { staticClass: "dropdown-item", attrs: { href: "#" } },
+                  [
+                    _c("i", { staticClass: "fa fa-envelope-o" }),
+                    _vm._v(" " + _vm._s(item.ingresos.msj) + "\n            "),
+                    _c("span", { staticClass: "badge badge-success" }, [
+                      _vm._v(_vm._s(item.ingresos.numero))
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  { staticClass: "dropdown-item", attrs: { href: "#" } },
+                  [
+                    _c("i", { staticClass: "fa fa-tasks" }),
+                    _vm._v(" " + _vm._s(item.ventas.msj) + "\n            "),
+                    _c("span", { staticClass: "badge badge-danger" }, [
+                      _vm._v(_vm._s(item.ventas.numero))
+                    ])
+                  ]
+                )
+              ])
+            })
+          )
+        : _c("div", [_vm._m(1)])
+    ])
+  ])
+}
+var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -76110,6 +76136,12 @@ var staticRenderFns = [
     return _c("div", { staticClass: "dropdown-header text-center" }, [
       _c("strong", [_vm._v("Notificaciones")])
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("a", [_c("span", [_vm._v("No tiene notificaciones")])])
   }
 ]
 render._withStripped = true

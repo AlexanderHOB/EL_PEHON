@@ -19,7 +19,7 @@ class CreatePlatillosTable extends Migration
             $table->integer('idcategoria')->unsigned();
             $table->string('nombre',60)->unique();
             $table->string('codigo',5);
-            $table->string('medida',40)->nullable();
+            $table->string('area',40);
             $table->decimal('precio',11,2);
             $table->string('descripcion',256)->nullable();
             $table->boolean('condicion')->default(1);

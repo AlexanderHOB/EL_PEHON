@@ -8,6 +8,9 @@
     <meta name="description" content="Sistema Peñon">
     <meta name="author" content="NibleTeach.com">
     <meta name="keyword" content="Sistema ventas El Peñon">
+    
+    <meta name="userId" content="{{Auth::check() ? Auth::user()->id : ''}}">
+ 
     <link rel="shortcut icon" href="img/ico/penion-1.ico">
     <title>EL PEÑON</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
