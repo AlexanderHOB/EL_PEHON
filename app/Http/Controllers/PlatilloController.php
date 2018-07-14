@@ -9,13 +9,13 @@ class PlatilloController extends Controller
     public function index(Request $request )
     {
 
-        //if(!$request->ajax()) return redirect('/');
+        if(!$request->ajax()) return redirect('/');
 
         $buscar= $request->buscar;
         $criterio=$request->criterio;
         if($buscar==''){
             $platillos=Platillo::join('categorias_platillos','platillos.idcategoria','=','categorias_platillos.id')
-            ->select('platillos.id','platillos.idcategoria','platillos.codigo',
+            ->select('platillos.id','platillos.idcategoria','platillos.codigo','platillos.area',
             'platillos.nombre','categorias_platillos.nombre as nombre_categoria',
             'platillos.precio','platillos.descripcion','platillos.condicion')
             ->orderBy('platillos.id','desc')->paginate(5);
@@ -41,6 +41,44 @@ class PlatilloController extends Controller
         ];
         
     }
+    public function buscarPlatillo(Request $request){
+        if (!$request->ajax()) return redirect('/');
+ 
+        $filtro = $request->filtro;
+        $platillos = Platillo::where('codigo','=', $filtro)
+        ->select('id','nombre','precio')
+        ->orderBy('nombre', 'asc')->take(1)->get();
+ 
+        return ['platillos' => $platillos];
+    }
+    public function listarPlatillo(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+
+        $buscar = $request->buscar;
+        $criterio = $request->criterio;
+        
+        if ($buscar==''){
+            $platillos = Platillo::join('categorias_platillos','platillos.idcategoria','=','categorias_platillos.id')
+            ->select('platillos.id','platillos.idcategoria','platillos.codigo','platillos.nombre'
+            ,'categorias_platillos.nombre as nombre_categoria','platillos.precio',
+            'platillos.descripcion','platillos.condicion')
+            ->orderBy('platillos.id', 'desc')->paginate(10);
+        }
+        else{
+            $platillos = Platillo::join('categorias_platillos','platillos.idcategoria','=','categorias_platillos.id')
+            ->select('platillos.id','platillos.idcategoria','platillos.codigo','platillos.nombre'
+            ,'categorias_platillos.nombre as nombre_categoria','platillos.precio',
+            'platillos.descripcion','platillos.condicion')
+            ->where('platillos.'.$criterio, 'like', '%'. $buscar . '%')   
+            ->orderBy('platillos.id', 'desc')->paginate(10);
+        }
+        
+
+        return [
+            'platillos' => $platillos
+        ];
+    }
     public function store(Request $request)
     {
         //if(!$request->ajax()) return redirect('/');
@@ -48,6 +86,7 @@ class PlatilloController extends Controller
         $platillo->idcategoria=$request->idcategoria;
         $platillo->codigo=$request->codigo;
         $platillo->nombre=$request->nombre;
+        $platillo->area=$request->area;
         $platillo->precio=$request->precio;
         $platillo->descripcion=$request->descripcion;
         $platillo->condicion='1';
@@ -56,11 +95,12 @@ class PlatilloController extends Controller
     }
     public function update(Request $request)
     {
-        //if(!$request->ajax()) return redirect('/');
+        if(!$request->ajax()) return redirect('/');
         $platillo = Platillo::findOrFail($request->id);
         $platillo->idcategoria=$request->idcategoria;
         $platillo->codigo=$request->codigo;
         $platillo->nombre=$request->nombre;
+        $platillo->area=$request->area;
         $platillo->precio=$request->precio;
         $platillo->descripcion=$request->descripcion;
         $platillo->condicion='1';
@@ -68,14 +108,14 @@ class PlatilloController extends Controller
     }
     public function desactivar(Request $request)
     {
-        //if(!$request->ajax()) return redirect('/');
+        if(!$request->ajax()) return redirect('/');
         $platillo = Platillo::findOrFail($request->id);
         $platillo->condicion='0';
         $platillo->save();
     }
     public function activar(Request $request)
     {
-        //if(!$request->ajax()) return redirect('/');
+        if(!$request->ajax()) return redirect('/');
         $platillo = Platillo::findOrFail($request->id);
         $platillo->condicion='1';
         $platillo->save();

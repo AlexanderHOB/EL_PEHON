@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Pedido extends Model
 {
     protected $fillable=[
-        'idempleado',
+        'idcliente',
         'idusuario',
+        'idmesa',
         'tipo_comprobante',
         'serie_comprobante',
         'num_comprobante',
-        'fecha_pedido',
+        'fecha_hora',
         'impuesto',
         'total',
         'estado'
@@ -22,5 +23,8 @@ class Pedido extends Model
     }
     public function proveedor(){
         return $this->belongsTo('App\Empleado');
+    }
+    public function mesa(){
+        return $this->belongsTo('App\Mesa');
     }
 }

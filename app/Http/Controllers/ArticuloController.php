@@ -84,7 +84,7 @@ class ArticuloController extends Controller
     } 
     public function listarArticuloVenta(Request $request)
     {
-        //if (!$request->ajax()) return redirect('/');
+        if (!$request->ajax()) return redirect('/');
 
         $buscar = $request->buscar;
         $criterio = $request->criterio;

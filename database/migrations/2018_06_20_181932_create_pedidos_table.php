@@ -15,14 +15,16 @@ class CreatePedidosTable extends Migration
     {
         Schema::create('pedidos', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('idempleado')->unsigned();
-            $table->foreign('idempleado')->references('id')->on('empleados');
+            $table->integer('idcliente')->unsigned();
+            $table->foreign('idcliente')->references('id')->on('personas');
             $table->integer('idusuario')->unsigned();
             $table->foreign('idusuario')->references('id')->on('users'); 
+            $table->integer('idmesa')->unsigned();
+            $table->foreign('idmesa')->references('id')->on('mesas');
             $table->string('tipo_comprobante', 20);
             $table->string('serie_comprobante', 7)->nullable();
             $table->string('num_comprobante', 10);    
-            $table->dateTime('fecha_pedido');
+            $table->dateTime('fecha_hora');
             $table->decimal('impuesto',4,2);
             $table->decimal('total',11,2);
             $table->string('estado',20);

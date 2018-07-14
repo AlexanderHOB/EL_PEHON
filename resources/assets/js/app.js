@@ -31,8 +31,7 @@ Vue.component('dashboard', require('./components/Dashboard.vue'));
 Vue.component('consultaingreso', require('./components/ConsultaIngreso.vue'));
 Vue.component('consultaventa', require('./components/ConsultaVenta.vue'));
 Vue.component('notification', require('./components/Notification.vue'));
-
-//Vue.component('pedido', require('./components/Pedido.vue'));
+Vue.component('pedido', require('./components/Pedido.vue'));
 const app = new Vue({
     el: '#app',
     data :{
@@ -51,7 +50,7 @@ const app = new Vue({
         
         Echo.private('App.User.' + userId).notification((notification) => {
              me.notifications.unshift(notification); 
-        });     
+        });
         
     }
 });

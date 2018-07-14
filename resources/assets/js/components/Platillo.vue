@@ -8,7 +8,7 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Categorías
+                        <i class="fa fa-align-justify"></i> Platillos Peñon
                         <button type="button" @click="abrirModal('platillo','registrar')" class="btn btn-secondary">
                             <i class="icon-plus"></i>&nbsp;Nuevo
                         </button>
@@ -33,6 +33,7 @@
                                     <th>Código</th>
                                     <th>Nombre</th>
                                     <th>Categoria</th>
+                                    <th>Area</th>
                                     <th>Precio Ventas</th>
                                     <th>Descripción</th>
                                     <th>Estado</th>
@@ -58,6 +59,7 @@
                                     <td v-text="platillo.codigo"></td>
                                     <td v-text="platillo.nombre"></td>
                                     <td v-text="platillo.nombre_categoria"></td>
+                                    <td v-text="platillo.area"></td>
                                     <td v-text="platillo.precio"></td>
                                     <td v-text="platillo.descripcion"></td>
                                     <td>
@@ -125,6 +127,17 @@
                                         
                                     </div>
                                 </div>
+                                 <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="email-input">Área de Preparación </label>
+                                    <div class="col-md-9">
+                                        <select  v-model="area" class="form-control">
+                                            <option value="Area Fria">Área Fria</option>
+                                            <option value="Area Caliente">Área Caliente</option>
+                                            <option value="Area Mixta">Área Mixta</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Precio de Venta</label>
                                     <div class="col-md-9">
@@ -133,12 +146,7 @@
                                     </div>
                                     
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="email-input">Medida</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="medida" class="form-control" placeholder="Ingrese medida">
-                                    </div>
-                                </div>
+
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="email-input">Descripción</label>
                                     <div class="col-md-9">
@@ -202,7 +210,7 @@
                 codigo:'',
                 nombre : '',
                 precio:'',
-                medida:'',
+                area:'',
                 descripcion : '',
                 arrayPlatillo : [],
                 modal : 0,
@@ -294,7 +302,7 @@
                     'codigo':this.codigo,
                     'nombre': this.nombre,
                     'precio':this.precio,
-                    'medida':this.medida,
+                    'area':this.area,
                     'descripcion': this.descripcion
                 }).then(function (response) {
                     me.cerrarModal();
@@ -315,7 +323,7 @@
                     'codigo':this.codigo,
                     'nombre': this.nombre,
                     'precio':this.precio,
-                    'medida':this.medida,
+                    'area':this.area,
                     'descripcion': this.descripcion,
                     'id':this.platillo_id
                 }).then(function (response) {
@@ -453,7 +461,7 @@
                                 this.codigo=data['codigo'];
                                 this.nombre=data['nombre'];
                                 this.precio=data['precio'];
-                                this.medida=data['medida'];
+                                this.area=data['area'];
                                 this.descripcion=data['descripcion'];
                                 break;
                             }

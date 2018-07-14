@@ -19,6 +19,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\TrustProxies::class,
+        
     ];
 
     /**
@@ -61,6 +62,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'Administrador'=>\App\Http\Middleware\Administrador::class,
         'Caja'=>\App\Http\Middleware\Caja::class,
-        'Mozo'=>\App\Http\Middleware\Mozo::class
+        'Mozo'=>\App\Http\Middleware\Mozo::class,
+        'cors'=>\Barryvdh\Cors\HandleCors::class
     ];
 }

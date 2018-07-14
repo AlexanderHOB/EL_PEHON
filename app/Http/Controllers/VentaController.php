@@ -108,7 +108,7 @@ class VentaController extends Controller
                 $detalle->descuento=$det['descuento']; 
                 $detalle->save();
             }          
-            $fechaActual=date('Y-m-d');
+           /* $fechaActual=date('Y-m-d');
             $numVentas=DB::table('ventas')->whereDate('created_at',$fechaActual)->count();
             $numIngresos=DB::table('ingresos')->whereDate('created_at',$fechaActual)->count();
             
@@ -129,7 +129,7 @@ class VentaController extends Controller
             DB::commit();
             return[
                 'id'=>$venta->id
-            ];
+            ];*/
         } catch (Exception $e){
             DB::rollBack();
         }

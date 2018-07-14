@@ -25,6 +25,7 @@ Route::group(['middleware'=>['auth']],function(){
     Route::get('dashboard','DashboardController');
     //Notificaciones
     Route::post('/notification/get','NotificationController@get');
+
     Route::group(['middleware'=>['Administrador']],function(){
         //Empleados
         Route::get('/empleado','EmpleadoController@index');
@@ -63,6 +64,9 @@ Route::group(['middleware'=>['auth']],function(){
         Route::put('/platillo/actualizar','PlatilloController@update');
         Route::put('/platillo/desactivar','PlatilloController@desactivar');
         Route::put('/platillo/activar','PlatilloController@activar');
+        Route::get('/platillo/buscarPlatillo','PlatilloController@buscarPlatillo');
+        Route::get('/platillo/listarPlatillo','PlatilloController@listarPlatillo');
+        
         //Roles
         Route::get('/rol','RolController@index');
         Route::get('/rol/selectRol','RolController@selectRol');
@@ -101,6 +105,17 @@ Route::group(['middleware'=>['auth']],function(){
         Route::get('/venta/obtenerCabecera', 'VentaController@obtenerCabecera');
         Route::get('/venta/obtenerDetalles', 'VentaController@obtenerDetalles');
         Route::get('/venta/pdf/{id}', 'VentaController@pdf')->name('venta_pdf');
+        //Pedidos
+        Route::get('/pedido', 'PedidoController@index');
+        Route::post('/pedido/registrar', 'PedidoController@store');
+        Route::put('/pedido/desactivar', 'PedidoController@desactivar');
+        Route::get('/pedido/obtenerCabecera', 'PedidoController@obtenerCabecera');
+        Route::get('/pedido/obtenerDetalles', 'PedidoController@obtenerDetalles');
+     /*-------------INTERFAZ DE APIS---------------*/  
+        Route::get('/reporteCategoria', function () {
+        return view('api.categorias');
+        });
+       
     });
     Route::group(['middleware'=>['Caja']],function(){
         //Clientes

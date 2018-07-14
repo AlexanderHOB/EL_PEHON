@@ -8,85 +8,299 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Pedidos
-                        <button type="button" @click="abrirModal('pedido','registrar')" class="btn btn-secondary">
+                        <i class="fa fa-align-justify"></i> Pedidos Peñon
+                        <button type="button" @click="mostrarDetalle()" class="btn btn-secondary">
                             <i class="icon-plus"></i>&nbsp;Nuevo
                         </button>
                     </div>
+                    <!-- Listado-->
+                    <template v-if="listado==1">
                     <div class="card-body">
                         <div class="form-group row">
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <select class="form-control col-md-3" v-model="criterio">
-                                      <option value="tipo_comprobate">Tipo Comprobante</option>
-                                      <option value="num_comprobante">Numero Comprobante</option>
-                                      <option value="fecha_pedido">Fecha-Hora</option>
-                                      
+                                      <option value="tipo_comprobante">Tipo Comprobante</option>
+                                      <option value="num_comprobante">Número Comprobante</option>
+                                      <option value="fecha_hora">Fecha-Hora</option>
                                     </select>
                                     <input type="text" v-model="buscar" @keyup.enter="listarPedido(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
-                                    <button type="submit" class="btn btn-primary" @click="listarPedido(1,buscar,criterio)"><i class="fa fa-search"></i> Buscar</button>
+                                    <button type="submit" @click="listarPedido(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-sm">
-                            <thead>
-                                <tr>
-                                    <th>Opciones</th>
-                                    <th>Usuario</th>
-                                    <th>Empleado</th>
-                                    <th>Tipo Comprobante</th>
-                                    <th>Serie Comprobante</th>
-                                    <th>Numero Comprobante</th>
-                                    <th>Fecha Hora</th>
-                                    <th>Total</th>
-                                    <th>Impuesto</th>
-                                    <th>Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="pedido in arrayPedido" :key="pedido.id">
-                                    <td>
-                                        <button type="button" @click="abrirModal('pedido','actualizar',pedido)" class="btn btn-success btn-sm">
-                                          <i class="icon-eye"></i>
-                                        </button> &nbsp;
-                                        <template v-if="pedido.estado=='Registrado'">
-                                            <button type="button" class="btn btn-danger btn sm" @click="desactivarPedido(pedido.id)">
-                                                <i class="icon-trash"></i>
-                                            </button>
-                                        </template>
-                
-                                    </td>
-                                    <td v-text="pedido.usuario"></td>
-                                    <td v-text="pedido.nombre"></td>
-                                    <td v-text="pedido.tipo_comprobante"></td>
-                                    <td v-text="pedido.serie_comprobante"></td>
-                                    <td v-text="pedido.num_comprobante"></td>
-                                    <td v-text="pedido.fecha_pedido"></td>
-                                    <td v-text="pedido.total"></td>
-                                    <td v-text="pedido.impuesto"></td>
-                                    <td v-text="pedido.estado"></td>
-                                    
-                                </tr>                                
-                            </tbody>
-                        </table>
+                                <thead>
+                                    <tr>
+                                        <th>Opciones</th>
+                                        <th>Usuario</th>
+                                        <th>Cliente</th>
+                                        <th>Tipo Comprobante</th>
+                                        <th>Serie Comprobante</th>
+                                        <th>Número Comprobante</th>
+                                        <th>Mesa</th>
+                                        <th>Fecha Hora</th>
+                                        <th>Total</th>
+                                        <th>Impuesto</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="pedido in arrayPedido" :key="pedido.id">
+                                        <td>
+                                            <button type="button" @click="verVenta(pedido.id)" class="btn btn-success btn-sm">
+                                            <i class="icon-eye"></i>
+                                            </button> &nbsp;
+                                            <button type="button" @click="pdfVenta(pedido.id)" class="btn btn-info btn-sm">
+                                            <i class="icon-doc"></i>
+                                            </button> &nbsp;
+                                            <template v-if="pedido.estado=='Registrado'">
+                                                <button type="button" class="btn btn-danger btn-sm" @click="desactivarVenta(pedido.id)">
+                                                    <i class="icon-trash"></i>
+                                                </button>
+                                            </template>
+                                        </td>
+                                        <td v-text="pedido.usuario"></td>
+                                        <td v-text="pedido.nombre"></td>
+                                        <td v-text="pedido.tipo_comprobante"></td>
+                                        <td v-text="pedido.serie_comprobante"></td>
+                                        <td v-text="pedido.num_comprobante"></td>
+                                        <td v-text="pedido.mesa"></td>
+                                        <td v-text="pedido.fecha_hora"></td>
+                                        <td v-text="pedido.total"></td>
+                                        <td v-text="pedido.impuesto"></td>
+                                        <td v-text="pedido.estado"></td>
+                                    </tr>                                
+                                </tbody>
+                            </table>
                         </div>
-                        
                         <nav>
                             <ul class="pagination">
-                                <li class="page-item" v-if="pagination.current_page>1">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page-1,buscar,criterio)">Ant</a>
+                                <li class="page-item" v-if="pagination.current_page > 1">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1,buscar,criterio)">Ant</a>
                                 </li>
                                 <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
                                     <a class="page-link" href="#" @click.prevent="cambiarPagina(page,buscar,criterio)" v-text="page"></a>
                                 </li>
-                                
-                                <li class="page-item" v-if="pagination.current_page<pagination.last_page">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page+1,buscar,criterio)">Sig</a>
+                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1,buscar,criterio)">Sig</a>
                                 </li>
                             </ul>
                         </nav>
                     </div>
+                    </template>
+                    <!--Fin Listado-->
+                    <!-- Detalle-->
+                    <template v-else-if="listado==0">
+                    <div class="card-body">
+                        <div class="form-group row border">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Mesa(*)</label>
+                                    <v-select
+                                        :on-search="selectMesa"
+                                        label="Mesa"
+                                        :options="arrayMesa"
+                                        placeholder="Buscar Mesas..."
+                                        :onChange="getDatosMesa"                                        
+                                    >
+
+                                    </v-select>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div v-show="errorPlatillo" class="form-group row div-error">
+                                    <div class="text-center text-error">
+                                        <div v-for="error in errorMostrarMsjVenta" :key="error" v-text="error">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row border">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Platillo <span style="color:red;" v-show="idplatillo==0">(*Seleccione)</span></label>
+                                    <div class="form-inline">
+                                        <input type="text" class="form-control" v-model="codigo" @keyup.enter="buscarPlatillo()" placeholder="Ingrese Platillo">
+                                        <button @click="abrirModal()" class="btn btn-primary">...</button>
+                                        <input type="text" readonly class="form-control" v-model="platillo">
+                                    </div>                                    
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>Precio <span style="color:red;" v-show="precio==0">(*Ingrese)</span></label>
+                                    <input type="number" value="0" step="any" class="form-control" v-model="precio">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>Cantidad <span style="color:red;" v-show="cantidad==0">(*Ingrese)</span></label>
+                                    <input type="number" value="0" class="form-control" v-model="cantidad">
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <button @click="agregarDetalle()" class="btn btn-success form-control btnagregar"><i class="icon-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row border">
+                            <div class="table-responsive col-md-12">
+                                <table class="table table-bordered table-striped table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Opciones</th>
+                                            <th>Artículo</th>
+                                            <th>Precio</th>
+                                            <th>Cantidad</th>
+                                            <th>Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody v-if="arrayDetalle.length">
+                                        <tr v-for="(detalle,index) in arrayDetalle" :key="detalle.id">
+                                            <td>
+                                                <button @click="eliminarDetalle(index)" type="button" class="btn btn-danger btn-sm">
+                                                    <i class="icon-close"></i>
+                                                </button>
+                                            </td>
+                                            <td v-text="detalle.platilllo">
+                                            </td>
+                                            <td>
+                                                <input v-model="detalle.precio" type="number" class="form-control">
+                                            </td>
+                                            
+                                            <td>
+                                                {{detalle.precio*detalle.cantidad}}
+                                            </td>
+                                        </tr>
+                                        <tr style="background-color: #CEECF5;">
+                                            <td colspan="4" align="right"><strong>Total Parcial:</strong></td>
+                                            <td>$ {{totalParcial=(total-totalImpuesto).toFixed(2)}}</td>
+                                        </tr>
+                                        <tr style="background-color: #CEECF5;">
+                                            <td colspan="4" align="right"><strong>Total Impuesto:</strong></td>
+                                            <td>$ {{totalImpuesto=((total*impuesto)/(1+impuesto)).toFixed(2)}}</td>
+                                        </tr>
+                                        <tr style="background-color: #CEECF5;">
+                                            <td colspan="4" align="right"><strong>Total Neto:</strong></td>
+                                            <td>$ {{total=calcularTotal}}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody v-else>
+                                        <tr>
+                                            <td colspan="6">
+                                                NO hay artículos agregados
+                                            </td>
+                                        </tr>
+                                    </tbody>                                    
+                                </table>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>
+                                <button type="button" class="btn btn-primary" @click="registrarVenta()">Registrar Pedido</button>
+                            </div>
+                        </div>
+                    </div>
+                    </template>
+                    <!-- Fin Detalle-->
+                    <!-- Ver ingreso -->
+                    <template v-else-if="listado==2">
+                    <div class="card-body">
+                        <div class="form-group row border">
+                            <div class="col-md-9">
+                                <div class="form-group">
+                                    <label for="">Cliente</label>
+                                    <p v-text="cliente"></p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="">Impuesto</label>
+                                <p v-text="impuesto"></p>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Tipo Comprobante</label>
+                                    <p v-text="tipo_comprobante"></p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Serie Comprobante</label>
+                                    <p v-text="serie_comprobante"></p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Número Comprobante</label>
+                                    <p v-text="num_comprobante"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row border">
+                            <div class="table-responsive col-md-12">
+                                <table class="table table-bordered table-striped table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Artículo</th>
+                                            <th>Precio</th>
+                                            <th>Cantidad</th>
+                                            <th>Descuento</th>
+                                            <th>Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody v-if="arrayDetalle.length">
+                                        <tr v-for="detalle in arrayDetalle" :key="detalle.id">
+                                            <td v-text="detalle.articulo">
+                                            </td>
+                                            <td v-text="detalle.precio">
+                                            </td>
+                                            <td v-text="detalle.cantidad">
+                                            </td>
+                                            <td v-text="detalle.descuento">
+                                            </td>
+                                            <td>
+                                                {{detalle.precio*detalle.cantidad-detalle.descuento}}
+                                            </td>
+                                        </tr>
+                                        <tr style="background-color: #CEECF5;">
+                                            <td colspan="4" align="right"><strong>Total Parcial:</strong></td>
+                                            <td>$ {{totalParcial=(total-totalImpuesto).toFixed(2)}}</td>
+                                        </tr>
+                                        <tr style="background-color: #CEECF5;">
+                                            <td colspan="4" align="right"><strong>Total Impuesto:</strong></td>
+                                            <td>$ {{totalImpuesto=((total*impuesto)).toFixed(2)}}</td>
+                                        </tr>
+                                        <tr style="background-color: #CEECF5;">
+                                            <td colspan="4" align="right"><strong>Total Neto:</strong></td>
+                                            <td>$ {{total}}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody v-else>
+                                        <tr>
+                                            <td colspan="5">
+                                                NO hay Platillos agregados
+                                            </td>
+                                        </tr>
+                                    </tbody>                                    
+                                </table>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    </template>
+                    <!-- fin ver ingreso -->
                 </div>
                 <!-- Fin ejemplo de tabla Listado -->
             </div>
@@ -101,85 +315,56 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Nombre</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="nombre" class="form-control" placeholder="Nombre de la persona">
-                                        
-                                    </div>
-                                </div>
-                                
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="email-input">Tipo Documento</label>
-                                    <div class="col-md-9">
-                                        <select  v-model="tipo_documento" class="form-control">
-                                            <option value="DNI">DNI</option>
-                                            <option value="RUC">RUC</option>
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <select class="form-control col-md-3" v-model="criterioA">
+                                        <option value="nombre">Nombre</option>
+                                        <option value="descripcion">Descripción</option>
+                                        <option value="codigo">Código</option>
                                         </select>
+                                        <input type="text" v-model="buscarA" @keyup.enter="listarPlatillo(buscarA,criterioA)" class="form-control" placeholder="Texto a buscar">
+                                        <button type="submit" @click="listarPlatillo(buscarA,criterioA)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Número de Documento</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="num_documento" class="form-control" placeholder="Numero de Documento">
-                                        
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Dirección</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="direccion" class="form-control" placeholder="Direccion">
-                                        
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Celular</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="celular" class="form-control" placeholder="Celular">
-                                        
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Email</label>
-                                    <div class="col-md-9">
-                                        <input type="email" v-model="email" class="form-control" placeholder="email">
-                                        
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Rol</label>
-                                    <div class="col-md-9">
-                                        <select class="form-control" v-model="idrol">
-                                            <option value="0">Seleccione un rol</option>
-                                            <option v-for="rol in arrayRol" :key="rol.id" :value="rol.id" v-text="rol.nombre"></option>
-                                        </select>                                
-                                     </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Usuario</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="usuario" class="form-control" placeholder="Nombre de Usuario">
-                                        
-                                </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Password</label>
-                                    <div class="col-md-9">
-                                        <input type="password" v-model="password" class="form-control" placeholder="Password">
-                                        
-                                    </div>
-                                </div>
-                                
-                                <div v-show="errorPersona" class="form-group row div-error">
-                                    <div class="text-center text-error">
-                                        <div v-for="error in errorMostrarMsjPersona" :key="error" v-text="error">
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </form>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Opciones</th>
+                                            <th>Código</th>
+                                            <th>Nombre</th>
+                                            <th>Categoría</th>
+                                            <th>Precio Venta</th>
+                                            
+                                            <th>Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="platillo in arrayPlatillo" :key="platillo.id">
+                                            <td>
+                                                <button type="button" @click="agregarDetalleModal(platillo)" class="btn btn-success btn-sm">
+                                                <i class="icon-check"></i>
+                                                </button>
+                                            </td>
+                                            <td v-text="platillo.codigo"></td>
+                                            <td v-text="platillo.nombre"></td>
+                                            <td v-text="platillo.nombre_categoria"></td>
+                                            <td v-text="platillo.precio"></td>                        
+                                            <td>
+                                                <div v-if="platillo.condicion">
+                                                    <span class="badge badge-success">Activo</span>
+                                                </div>
+                                                <div v-else>
+                                                    <span class="badge badge-danger">Desactivado</span>
+                                                </div>
+                                                
+                                            </td>
+                                        </tr>                                
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
@@ -192,327 +377,416 @@
                 <!-- /.modal-dialog -->
             </div>
             <!--Fin del modal-->
-            <!-- Inicio del modal Eliminar -->
-            <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
-                <div class="modal-dialog modal-danger" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Eliminar Empleado</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Estas seguro de eliminar al Empleado?</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <button type="button" class="btn btn-danger">Eliminar</button>
-                        </div>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
-            <!-- Fin del modal Eliminar -->
         </main>
 </template>
 
 <script>
+    import vSelect from 'vue-select';
     export default {
         data (){
             return {
-                pedido_id:0,
-                idempleado:0,
-                nombre:'',
-                tipo_comprobante:'Boleta',
-                serie_comprobate:'',
-                num_comprobante:'',
-                impuesto:0.18,
-                total:0.0,              
+                pedido_id: 0,
+                idcliente:0,
+                cliente:'',
+                tipo_comprobante : 'BOLETA',
+                serie_comprobante : '',
+                num_comprobante : '',
+                mesa:0,
+                impuesto: 0.0,
+                total:0.0,
+                totalImpuesto: 0.0,
+                totalParcial: 0.0,
                 arrayPedido : [],
-                arrayDetalle:[],
+                arrayCliente: [],
+                arrayDetalle : [],
+                listado:1,
                 modal : 0,
                 tituloModal : '',
                 tipoAccion : 0,
                 errorPedido : 0,
                 errorMostrarMsjPedido : [],
                 pagination : {
-                    'total' :0,
-                    'current_page':0,
-                    'per_page' :0,
-                    'last_page':0,     
-                    'from'     :0, 
-                    'to'       :0,   
+                    'total' : 0,
+                    'current_page' : 0,
+                    'per_page' : 0,
+                    'last_page' : 0,
+                    'from' : 0,
+                    'to' : 0,
                 },
                 offset : 3,
-                criterio:'num_comprobante',
-                buscar:''
+                criterio : 'num_comprobante',
+                buscar : '',
+                criterioA:'nombre',
+                buscarA: '',
+                arrayPlatillo: [],
+                idplatillo: 0,
+                codigo: '',
+                platillo: '',
+                precio: 0,
+                cantidad:0,
+                
             }
+        },
+        components: {
+            vSelect
         },
         computed:{
             isActived: function(){
                 return this.pagination.current_page;
             },
-            //calculate los elementos de paginacion
-            pagesNumber: function(){
-                if(!this.pagination.to){
+            //Calcula los elementos de la paginación
+            pagesNumber: function() {
+                if(!this.pagination.to) {
                     return [];
                 }
-                var from =this.pagination.current_page - this.offset;
-                if(from<1){
-                    from=1;
+                
+                var from = this.pagination.current_page - this.offset; 
+                if(from < 1) {
+                    from = 1;
                 }
-                var to = from+(this.offset*2);
-                if (to >= this.pagination.last_page){
-                    to=this.pagination.last_page;
-                }
-                var pagesArray =[];
-                while(from<= to){
+
+                var to = from + (this.offset * 2); 
+                if(to >= this.pagination.last_page){
+                    to = this.pagination.last_page;
+                }  
+
+                var pagesArray = [];
+                while(from <= to) {
                     pagesArray.push(from);
                     from++;
                 }
                 return pagesArray;
+            },
+            calcularTotal: function(){
+                var resultado=0.0;
+                for(var i=0;i<this.arrayDetalle.length;i++){
+                    resultado=resultado+(this.arrayDetalle[i].precio*this.arrayDetalle[i].cantidad-this.arrayDetalle[i].descuento)
+                }
+                return resultado;
             }
         },
         methods : {
             listarPedido (page,buscar,criterio){
                 let me=this;
-                var url='/pedido?page='+page+'&buscar='+buscar+'&criterio='+criterio;
+                var url= '/pedido?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
                 axios.get(url).then(function (response) {
-                    var respuesta=response.data;
-                    me.arrayPedido=respuesta.pedidos.data;
-                    me.pagination=respuesta.pagination;
+                    var respuesta= response.data;
+                    me.arrayPedido = respuesta.pedidos.data;
+                    me.pagination= respuesta.pagination;
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
             },
-            selectRol(){
-                let me = this;
-                var url='/rol/selectRol';
-                axios.get(url).then(function (response) {
-                    var respuesta=response.data;
-                    me.arrayRol=respuesta.roles;
-                   
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-            },
-            cambiarPagina(page,buscar,criterio){
+            selectCliente(search,loading){
                 let me=this;
-                //Actualizar la Página Actual
-                me.pagination.current_page=page;
-                //Enviar la peticion para visualizar la pagina
-                me.listarPedido(page,buscar,criterio)
+                loading(true)
+
+                var url= '/cliente/selectCliente?filtro='+search;
+                axios.get(url).then(function (response) {
+                    let respuesta = response.data;
+                    q: search
+                    me.arrayCliente=respuesta.clientes;
+                    loading(false)
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
             },
-            registrarPersona(){
-                if (this.validarPersona()){
+            pdfVenta(id){
+                window.open('http://127.0.0.1:8000/venta/pdf/'+id+','+'_blank');
+            },
+            getDatosCliente(val1){
+                let me = this;
+                me.loading = true;
+                me.idcliente = val1.id;
+            },
+            buscarPlatillo(){
+                let me=this;
+                var url= '/platillo/buscarPlatillo?filtro=' + me.codigo;
+
+                axios.get(url).then(function (response) {
+                    var respuesta= response.data;
+                    me.arrayPlatillo = respuesta.platillos;
+
+                    if (me.arrayPlatillo.length>0){
+                        me.platillo=me.arrayPlatillo[0]['nombre'];
+                        me.idplatillo=me.arrayPlatillo[0]['id'];
+                        me.precio=me.arrayPlatillo[0]['precio'];
+                    }
+                    else{
+                        me.platillo='No existe artículo';
+                        me.idplatillo=0;
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
+
+            cambiarPagina(page,buscar,criterio){
+                let me = this;
+                //Actualiza la página actual
+                me.pagination.current_page = page;
+                //Envia la petición para visualizar la data de esa página
+                me.listarPedido(page,buscar,criterio);
+            },
+            encuentra(id){
+                var sw=0;
+                for(var i=0;i<this.arrayDetalle.length;i++){
+                    if(this.arrayDetalle[i].idarticulo==id){
+                        sw=true;
+                    }
+                }
+                return sw;
+            },
+            eliminarDetalle(index){
+                let me = this;
+                me.arrayDetalle.splice(index, 1);
+            },
+            agregarDetalle(){
+                let me=this;
+                if(me.idarticulo==0 || me.cantidad==0 || me.precio==0){
+                }
+                else{
+                    if(me.encuentra(me.idarticulo)){
+                        swal({
+                            type: 'error',
+                            title: 'Error...',
+                            text: 'Ese artículo ya se encuentra agregado!',
+                            })
+                    }
+                    else{
+                       if(me.cantidad>me.stock){
+                           swal({
+                            type: 'error',
+                            title: 'Error...',
+                            text: 'NO hay stock disponible!',
+                            })
+                       } 
+                       else{
+                           me.arrayDetalle.push({
+                                idarticulo: me.idarticulo,
+                                articulo: me.articulo,
+                                cantidad: me.cantidad,
+                                precio: me.precio,
+                                descuento: me.descuento,
+                                stock: me.stock
+                            });
+                            me.codigo="";
+                            me.idarticulo=0;
+                            me.articulo="";
+                            me.cantidad=0;
+                            me.precio=0;
+                            me.descuento=0;
+                            me.stock=0
+                       }
+                    }
+                    
+                }
+
+                
+
+            },
+            agregarDetalleModal(data =[]){
+                let me=this;
+                if(me.encuentra(data['id'])){
+                        swal({
+                            type: 'error',
+                            title: 'Error...',
+                            text: 'Ese artículo ya se encuentra agregado!',
+                            })
+                    }
+                    else{
+                       me.arrayDetalle.push({
+                            idarticulo: data['id'],
+                            articulo: data['nombre'],
+                            cantidad: 1,
+                            precio: data['precio_venta'],
+                            descuento:0,
+                            stock:data['stock']
+                        }); 
+                    }
+            },
+            listarPlatillo (buscar,criterio){
+                let me=this;
+                var url= '/platillo/listarPlatillo?buscar='+ buscar + '&criterio='+ criterio;
+                axios.get(url).then(function (response) {
+                    var respuesta= response.data;
+                    me.arrayPlatillo = respuesta.platillos.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
+            registrarVenta(){
+                if (this.validarVenta()){
                     return;
                 }
                 
                 let me = this;
 
-                axios.post('/user/registrar',{
-                    'nombre': this.nombre,
-                    'tipo_documento':this.tipo_documento,
-                    'num_documento':this.num_documento,
-                    'direccion':this.direccion,
-                    'celular':this.celular,
-                    'email': this.email,
-                    'usuario': this.usuario,
-                    'password': this.password,
-                    'idrol': this.idrol
-                    
+                axios.post('/venta/registrar',{
+                    'idcliente': this.idcliente,
+                    'tipo_comprobante': this.tipo_comprobante,
+                    'serie_comprobante' : this.serie_comprobante,
+                    'num_comprobante' : this.num_comprobante,
+                    'impuesto' : this.impuesto,
+                    'total' : this.total,
+                    'data': this.arrayDetalle
+
                 }).then(function (response) {
-                    me.cerrarModal();
-                    me.listarPersona(1,'','nombre');
+                    me.listado=1;
+                    me.listarVenta(1,'','num_comprobante');
+                    me.idcliente=0;
+                    me.tipo_comprobante='BOLETA';
+                    me.serie_comprobante='';
+                    me.num_comprobante='';
+                    me.impuesto=0.18;
+                    me.total=0.0;
+                    me.idarticulo=0;
+                    me.articulo='';
+                    me.cantidad=0;
+                    me.precio=0;
+                    me.stock=0;
+                    me.codigo='';
+                    me.descuento=0;
+                    me.arrayDetalle=[];
+                    window.open('http://127.0.0.1:8000/venta/pdf/'+response.data.id+','+'_blank');
                 }).catch(function (error) {
                     console.log(error);
                 });
             },
-            actualizarPersona(){
-                if (this.validarPersona()){
-                    return;
-                }
+            validarVenta(){
+                let me=this;
+                me.errorPlatillo=0;
+                me.errorMostrarMsjPlatillo =[];
+                var art;
                 
-                let me = this;
+                me.arrayDetalle.map(function(x){
+                    if (x.cantidad>x.stock){
+                        art=x.articulo + " con stock insuficiente";
+                        me.errorMostrarMsjVenta.push(art);
+                    }
+                });
 
-                axios.put('/user/actualizar',{
-                    'nombre': this.nombre,
-                    'tipo_documento':this.tipo_documento,
-                    'num_documento':this.num_documento,
-                    'direccion':this.direccion,
-                    'celular':this.celular,
-                    'email': this.email,
-                    'usuario': this.usuario,
-                    'password': this.password,
-                    'idrol': this.idrol,
-                    'id':this.persona_id
-                }).then(function (response) {
-                    me.cerrarModal();
-                    me.listarPersona(1,'','nombre');
-                }).catch(function (error) {
+                if (me.idcliente==0) me.errorMostrarMsjVenta.push("Seleccione un Cliente");
+                if (me.tipo_comprobante==0) me.errorMostrarMsjVenta.push("Seleccione el comprobante");
+                if (!me.num_comprobante) me.errorMostrarMsjVenta.push("Ingrese el número de comprobante");
+                if (!me.impuesto) me.errorMostrarMsjVenta.push("Ingrese el impuesto de compra");
+                if (me.arrayDetalle.length<=0) me.errorMostrarMsjVenta.push("Ingrese detalles");
+
+                if (me.errorMostrarMsjVenta.length) me.errorPlatillo = 1;
+
+                return me.errorVenta;
+            },
+            mostrarDetalle(){
+                let me=this;
+                me.listado=0;
+
+                me.idproveedor=0;
+                me.tipo_comprobante='BOLETA';
+                me.serie_comprobante='';
+                me.num_comprobante='';
+                me.impuesto=0.18;
+                me.total=0.0;
+                me.idarticulo=0;
+                me.articulo='';
+                me.cantidad=0;
+                me.precio=0;
+                me.arrayDetalle=[];
+            },
+            ocultarDetalle(){
+                this.listado=1;
+            },
+            verVenta(id){
+                let me=this;
+                me.listado=2;
+                
+                //Obtener los datos del ingreso
+                var arrayVentaT=[];
+                var url= '/venta/obtenerCabecera?id=' + id;
+                
+                axios.get(url).then(function (response) {
+                    var respuesta= response.data;
+                    arrayVentaT = respuesta.venta;
+
+                    me.cliente = arrayVentaT[0]['nombre'];
+                    me.tipo_comprobante=arrayVentaT[0]['tipo_comprobante'];
+                    me.serie_comprobante=arrayVentaT[0]['serie_comprobante'];
+                    me.num_comprobante=arrayVentaT[0]['num_comprobante'];
+                    me.impuesto=arrayVentaT[0]['impuesto'];
+                    me.total=arrayVentaT[0]['total'];
+                })
+                .catch(function (error) {
                     console.log(error);
                 });
-            },
-desactivarUsuario(id){
-               swal({
-                title: 'Esta seguro de desactivar este usuario?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Aceptar!',
-                cancelButtonText: 'Cancelar',
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
-                reverseButtons: true
-                }).then((result) => {
-                if (result.value) {
-                    let me = this;
 
-                    axios.put('/user/desactivar',{
-                        'id': id
-                    }).then(function (response) {
-                        me.listarPersona(1,'','nombre');
-                        swal(
-                        'Desactivado!',
-                        'El registro ha sido desactivado con éxito.',
-                        'success'
-                        )
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-                    
-                    
-                } else if (
-                    // Read more about handling dismissals
-                    result.dismiss === swal.DismissReason.cancel
-                ) {
-                    
-                }
-                }) 
-            },
-            activarUsuario(id){
-               swal({
-                title: 'Esta seguro de activar este usuario?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Aceptar!',
-                cancelButtonText: 'Cancelar',
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
-                reverseButtons: true
-                }).then((result) => {
-                if (result.value) {
-                    let me = this;
-
-                    axios.put('/user/activar',{
-                        'id': id
-                    }).then(function (response) {
-                        me.listarPersona(1,'','nombre');
-                        swal(
-                        'Activado!',
-                        'El registro ha sido activado con éxito.',
-                        'success'
-                        )
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-                    
-                    
-                } else if (
-                    // Read more about handling dismissals
-                    result.dismiss === swal.DismissReason.cancel
-                ) {
-                    
-                }
-                }) 
-            },
-        
-            validarPersona(){
-                this.errorPersona=0;
-                this.errorMostrarMsjPersona =[];
-
-                if (!this.nombre) this.errorMostrarMsjPersona.push("El nombre de la Persona no puede estar vacío.");
-                if (!this.usuario) this.errorMostrarMsjPersona.push("El nombre de la usuario no puede estar vacío.");
-                if (!this.password) this.errorMostrarMsjPersona.push("La contraseña no puede estar vacío.");
-                if (this.idrol==0) this.errorMostrarMsjPersona.push("Debe seleccionar un rol para el usuario.");
-                if (this.errorMostrarMsjPersona.length) this.errorPersona = 1;
-
-                return this.errorPersona;
+                //Obtener los datos de los detalles 
+                var urld= '/venta/obtenerDetalles?id=' + id;
+                
+                axios.get(urld).then(function (response) {
+                    console.log(response);
+                    var respuesta= response.data;
+                    me.arrayDetalle = respuesta.detalles;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });               
             },
             cerrarModal(){
                 this.modal=0;
                 this.tituloModal='';
-                this.tipo_documento='DNI';
-                this.num_documento='';
-                this.direccion='';
-                this.nombre='';
-                this.celular='';
-                this.email='';
-                this.tipo_empleado='';
-                this.usuario='';
-                this.password='';
-                this.idrol=0;
-                this.errorPersona=0;
+            }, 
+            abrirModal(){               
+                this.arrayPedido=[];
+                this.modal = 1;
+                this.tituloModal = 'Seleccione uno o varios Platillos';
             },
-            abrirModal(modelo, accion, data = []){
-                this.selectRol();
-                switch(modelo){
-                    case "personas":
-                    {
-                        switch(accion){
-                            case 'registrar':
-                            {
-                                this.modal = 1;
-                                this.tituloModal = 'Registrar Usuario';
-                                this.nombre= '';
-                                this.tipo_documento='DNI';
-                                this.num_documento='';
-                                this.direccion='';
-                                this.celular='';
-                                this.email='';
-                                this.usuario='';
-                                this.password='';
-                                this.idrol=0;
-                                this.tipoAccion = 1;
-                                break;
-                            }
-                            case 'actualizar':
-                            {
-                                console.log(data);
-                                this.modal=1;
-                                this.tituloModal='Actualizar Cliente';
-                                this.tipoAccion=2;
-                                this.persona_id=data['id'];
-                                this.nombre=data['nombre'];
-                                this.tipo_documento=data['tipo_documento'];
-                                this.num_documento=data['num_documento'];
-                                this.direccion=data['direccion'];
-                                this.celular=data['celular'];
-                                this.email=data['email'];
-                                this.usuario=data['usuario']
-                                this.password=data['password'];
-                                this.idrol=data['idrol'];
-                                break;
-                            }
-                        }
-                    }
+            desactivarVenta(id){
+               swal({
+                title: 'Esta seguro de anular esta venta?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar!',
+                cancelButtonText: 'Cancelar',
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+                reverseButtons: true
+                }).then((result) => {
+                if (result.value) {
+                    let me = this;
+
+                    axios.put('/venta/desactivar',{
+                        'id': id
+                    }).then(function (response) {
+                        me.listarVenta(1,'','num_comprobante');
+                        swal(
+                        'Anulado!',
+                        'La venta ha sido anulada con éxito.',
+                        'success'
+                        )
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                    
+                    
+                } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === swal.DismissReason.cancel
+                ) {
+                    
                 }
-            }
+                }) 
+            },
         },
         mounted() {
             this.listarPedido(1,this.buscar,this.criterio);
         }
     }
-    
 </script>
 <style>    
     .modal-content{
@@ -533,4 +807,10 @@ desactivarUsuario(id){
         color: red !important;
         font-weight: bold;
     }
+    @media (min-width: 600px) {
+        .btnagregar {
+            margin-top: 2rem;
+        }
+    }
+
 </style>
