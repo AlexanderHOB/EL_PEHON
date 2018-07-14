@@ -28,6 +28,7 @@ class VentasController extends Controller
     }
     public function getVentas(Request $request)
     {
+        $anio=date('Y');
         $ventas=DB::table('ventas as v')
         ->select(DB::raw('MONTH(v.fecha_hora) as mes'),
         DB::raw('YEAR(v.fecha_hora) as anio'),

@@ -31,7 +31,40 @@
         </button>
         
     </header>
-
+    <div class="app-body">
+        <main class="main">
+            <div class="container-fluid">
+                <div class="card-body">
+                    <div class="form-group row border center">
+                        <div class="col-md-12">
+                                <form class="form-horizontal"  id="login">
+                                    <legend align="center">
+                                            Inicio de Sesion
+                                    </legend>
+                                    <div class="form-group">
+                                      <label class="control-label col-sm-2" for="email">Email:</label>
+                                      <div class="col-sm-12">
+                                        <input type="email" class="form-control" id="email" placeholder="Enter email">
+                                      </div>
+                                    </div>
+                                    <div class="form-group">
+                                      <label class="control-label col-sm-2" for="pwd">Contraseña:</label>
+                                      <div class="col-sm-12"> 
+                                        <input type="password" class="form-control" id="password" placeholder="Enter password">
+                                      </div>
+                                    </div>
+                                    <div class="form-group center"> 
+                                      <div class="col-sm-offset-2 col-sm-12" align="center">
+                                        <button type="submit" class="btn btn-success" >Ingresar</button>
+                                      </div>
+                                    </div>
+                                  </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
     <div class="app-body">
     
         <main class="main">
@@ -40,6 +73,7 @@
                     <div class="form-group row border center">
                         <div class="col-md-12">
                             <br>
+                            <!-- Prueba
                             <button id="obtener" class="btn-success col-md-12">
                                 Obtener Categorias De Productos
                             </button>
@@ -49,7 +83,8 @@
                                 Obtener Categorias De Platillos
                             </button> 
                             </br>
-                            </br>
+                            </br>-->
+                            <!-- Fin de Prueba-->
                             <button id="obtener2" class="btn-success col-md-12">
                                     Obtener Ventas Del Mes
                             </button> 
@@ -73,7 +108,7 @@
                             <ol id="contenido" class="list-group">
                 
                             </ol>
-                            <div class="col-md-12">
+                            <div class="col-md-12" id="space">
                                     <div class="card card-chart">
                                         <div class="card-header">
                                             <h4>Ventas</h4>
@@ -81,6 +116,23 @@
                                         <div class="card-content">
                                             <div class="ct-chart">
                                                 <canvas id="myChart">
+
+                                                </canvas>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer">
+                                            <p>Ventas de los últimos meses.</p>
+                                        </div>
+                                    </div>
+                            </div>
+                            <div class="col-md-12" id="space">
+                                    <div class="card card-chart">
+                                        <div class="card-header">
+                                            <h4>Ingresos</h4>
+                                        </div>
+                                        <div class="card-content">
+                                            <div class="ct-chart">
+                                                <canvas id="myChart1">
 
                                                 </canvas>
                                             </div>
@@ -102,12 +154,36 @@
         <span><a href="http://www.nibbleframe.com/">NibbleFrame</a> &copy; 2018</span>
         <span class="ml-auto">Desarrollado por <a href="http://www.nibbleframe.com/">NibbleFrame</a></span>
     </footer>
-    
-
     <script src="js/app.js"></script>
     <script src="js/plantilla.js"></script>
     <script src="js/majax.js"></script>
+    <!-- Scrip Login-->
     <script>
+            Majax.setConfig(2,'cLrHpwlawIu90LujZtKhYKVX4Lsz20XGI9fVMoFl','');
+                var form = document.getElementById('login'),
+                    email=document.getElementById('email'),
+                    password=document.getElementById('password');
+                    form.addEventListener('submit',function(e){
+                        e.preventDefault();
+                        var majax=new Majax();
+                            majax.oauth(
+                                email.value,
+                                password.value,
+                                {
+                                    valid: function(r){
+                                        alert('sesion iniciada');
+                                        console.info(r);
+                                    },
+                                    error: function(error){
+                                        alert('error al ingresar');
+                                        console.info(error);
+                                    }
+                                }
+                            );
+                    },false);
+        </script>
+    <!-- Fin Login-->
+    <!--<script>
             Majax.setConfig(2,'cLrHpwlawIu90LujZtKhYKVX4Lsz20XGI9fVMoFl','');
             var boton=document.getElementById('obtener');
             boton.addEventListener('click',function(e){
@@ -141,9 +217,9 @@
                 )
             },false)
     
-    </script>
+    </script>-->
     <!--SCRIP DE CATEGORIAS DE PLATILLOS  -->
-    <script>
+    <!--<script>
             Majax.setConfig(2,'cLrHpwlawIu90LujZtKhYKVX4Lsz20XGI9fVMoFl','');
             var boton=document.getElementById('obtener1');
             boton.addEventListener('click',function(e){
@@ -177,7 +253,7 @@
                 )
             },false)
     
-    </script>
+    </script>-->
     <!--  OBTENER VENTAS DEL MES -->
     <script>
             Majax.setConfig(2,'cLrHpwlawIu90LujZtKhYKVX4Lsz20XGI9fVMoFl','');
@@ -196,6 +272,7 @@
                                 varMesIngreso=[];
                                 varTotalIngreso=[];
                                 contenido.innerHTML="";
+                                document.getElementById("myChart").innerHTML='';
                            /* for(var i=0,n=data.length;i<n;i++){                           
                                 temp=document.createElement('span');
                                 temp.innerHTML="Mes: "+data[i].mes+" Total:  "+data[i].total;
@@ -264,6 +341,7 @@
                                 varMesIngreso=[];
                                 varTotalIngreso=[];
                                 contenido.innerHTML="";
+                                document.getElementById("myChart").innerHTML='';
                         /*    for(var i=0,n=data.length;i<n;i++){                           
                                 temp=document.createElement('span');
                                 temp.innerHTML="Mes: "+data[i].dia+" Total:  "+data[i].total;
@@ -332,6 +410,7 @@
                                 varMesIngreso=[];
                                 varTotalIngreso=[];
                                 contenido.innerHTML="";
+                                document.getElementById("myChart1").innerHTML='';
                         /*    for(var i=0,n=data.length;i<n;i++){                           
                                 temp=document.createElement('span');
                                 temp.innerHTML="Mes: "+data[i].dia+" Total:  "+data[i].total;
@@ -399,8 +478,8 @@
                                 temp=null;
                                 varMesIngreso=[];
                                 varTotalIngreso=[];
-                                contenido.innerHTML="";
-                        /*    for(var i=0,n=data.length;i<n;i++){                           
+                                contenido.innerHTML="";                                
+                                /*    for(var i=0,n=data.length;i<n;i++){                           
                                 temp=document.createElement('span');
                                 temp.innerHTML="Mes: "+data[i].dia+" Total:  "+data[i].total;
                                 temp2=document.createElement('div');
@@ -415,7 +494,7 @@
                                 varMesIngreso.push(x.dia);
                                 varTotalIngreso.push(x.total);
                             });
-                            var ctx = document.getElementById("myChart").getContext('2d');
+                            var ctx = document.getElementById("myChart1").getContext('2d');
                             var myChart = new Chart(ctx, {
                                 type: 'bar',
                                 data: {
@@ -449,6 +528,7 @@
             },false)
     
     </script>
+    <!-- FIN DE INGRESOS DEL DIA-->
 </body>
 
 </html>
