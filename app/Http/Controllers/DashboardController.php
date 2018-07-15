@@ -24,6 +24,25 @@ class DashboardController extends Controller
         ->whereYear('v.fecha_hora',$anio)
         ->groupBy(DB::raw('MONTH(v.fecha_hora)'),DB::raw('YEAR(v.fecha_hora)'))
         ->get();
+        
+        $ventasDia=DB::table('ventas as v')
+        ->select(DB::raw('DAY(v.fecha_hora) as dia'),
+        DB::raw('MONTH(v.fecha_hora) as mes'),
+        DB::raw('SUM(v.total) as total'))
+        ->whereYear('v.fecha_hora',$anio)
+        ->groupBy(DB::raw('DAY(v.fecha_hora)'),DB::raw('MONTH(v.fecha_hora)'))
+        ->get();
+ 
+        
+        $ingresosDia=DB::table('ingresos as i')
+        ->select(DB::raw('DAY(i.fecha_hora) as dia'),
+        DB::raw('MONTH(i.fecha_hora) as mes'),
+        DB::raw('SUM(i.total) as total'))
+        ->whereYear('i.fecha_hora',$anio)
+        ->groupBy(DB::raw('DAY(i.fecha_hora)'),DB::raw('MONTH(i.fecha_hora)'))
+        ->get();
+ 
+        
  
         return ['ingresos'=>$ingresos,'ventas'=>$ventas,'anio'=>$anio];      
  

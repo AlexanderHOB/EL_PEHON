@@ -37,8 +37,16 @@ class MesaController extends Controller
             'mesas' =>  $mesas
         ];
     }
-
-
+    
+    public function selectMesa(Request $request){
+        //if(!$request->ajax()) return redirect('/');
+        $filtro = $request->filtro;
+        $mesas=Mesa::where('numero','like','%'.$filtro .'%')
+        ->select('id','numero','capacidad','descripcion')
+        ->orderBy('id','asc')
+        ->get();
+        return ['mesas'=> $mesas];
+    }
     /**
      * Store a newly created resource in storage.
      *

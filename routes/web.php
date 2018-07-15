@@ -76,6 +76,7 @@ Route::group(['middleware'=>['auth']],function(){
         Route::put('/Mesa/actualizar','MesaController@update');
         Route::put('/Mesa/desactivar','MesaController@desactivar');
         Route::put('/Mesa/activar','MesaController@activar');
+        Route::get('/mesa/selectMesa','MesaController@selectMesa');
         //Clientes
         Route::get('/cliente','ClienteController@index');
         Route::post('/cliente/registrar','ClienteController@store');
@@ -111,6 +112,7 @@ Route::group(['middleware'=>['auth']],function(){
         Route::put('/pedido/desactivar', 'PedidoController@desactivar');
         Route::get('/pedido/obtenerCabecera', 'PedidoController@obtenerCabecera');
         Route::get('/pedido/obtenerDetalles', 'PedidoController@obtenerDetalles');
+        Route::get('/pedido/obtenerPedidos', 'PedidoController@obtenerPedidos');
      /*-------------INTERFAZ DE APIS---------------*/  
         Route::get('/reporteCategoria', function () {
         return view('api.categorias');

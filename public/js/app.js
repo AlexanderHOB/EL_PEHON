@@ -76660,13 +76660,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -76674,6 +76667,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             pedido_id: 0,
             idcliente: 0,
+            idmesa: 0,
             cliente: '',
             tipo_comprobante: 'BOLETA',
             serie_comprobante: '',
@@ -76685,6 +76679,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             totalParcial: 0.0,
             arrayPedido: [],
             arrayCliente: [],
+            arrayMesa: [],
             arrayDetalle: [],
             listado: 1,
             modal: 0,
@@ -76748,7 +76743,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         calcularTotal: function calcularTotal() {
             var resultado = 0.0;
             for (var i = 0; i < this.arrayDetalle.length; i++) {
-                resultado = resultado + (this.arrayDetalle[i].precio * this.arrayDetalle[i].cantidad - this.arrayDetalle[i].descuento);
+                resultado = resultado + this.arrayDetalle[i].precio * this.arrayDetalle[i].cantidad;
             }
             return resultado;
         }
@@ -76756,7 +76751,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         listarPedido: function listarPedido(page, buscar, criterio) {
             var me = this;
-            var url = '/pedido?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
+            var url = '/pedido/obtenerPedidos?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
             axios.get(url).then(function (response) {
                 var respuesta = response.data;
                 me.arrayPedido = respuesta.pedidos.data;
@@ -76765,15 +76760,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(error);
             });
         },
-        selectCliente: function selectCliente(search, loading) {
+        selectMesa: function selectMesa(search, loading) {
             var me = this;
             loading(true);
 
-            var url = '/cliente/selectCliente?filtro=' + search;
+            var url = '/mesa/selectMesa?filtro=' + search;
             axios.get(url).then(function (response) {
                 var respuesta = response.data;
                 q: search;
-                me.arrayCliente = respuesta.clientes;
+                me.arrayMesa = respuesta.mesas;
                 loading(false);
             }).catch(function (error) {
                 console.log(error);
@@ -76782,10 +76777,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         pdfVenta: function pdfVenta(id) {
             window.open('http://127.0.0.1:8000/venta/pdf/' + id + ',' + '_blank');
         },
-        getDatosCliente: function getDatosCliente(val1) {
+        getDatosMesa: function getDatosMesa(val1) {
             var me = this;
             me.loading = true;
-            me.idcliente = val1.id;
+            me.idmesa = val1.id;
         },
         buscarPlatillo: function buscarPlatillo() {
             var me = this;
@@ -76817,7 +76812,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         encuentra: function encuentra(id) {
             var sw = 0;
             for (var i = 0; i < this.arrayDetalle.length; i++) {
-                if (this.arrayDetalle[i].idarticulo == id) {
+                if (this.arrayDetalle[i].idplatillo == id) {
                     sw = true;
                 }
             }
@@ -76829,37 +76824,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         agregarDetalle: function agregarDetalle() {
             var me = this;
-            if (me.idarticulo == 0 || me.cantidad == 0 || me.precio == 0) {} else {
-                if (me.encuentra(me.idarticulo)) {
+            if (me.idplatillo == 0 || me.cantidad == 0 || me.precio == 0) {} else {
+                if (me.encuentra(me.idplatillo)) {
                     swal({
                         type: 'error',
                         title: 'Error...',
-                        text: 'Ese artículo ya se encuentra agregado!'
+                        text: 'Ese platillo ya se encuentra agregado!'
                     });
                 } else {
-                    if (me.cantidad > me.stock) {
-                        swal({
-                            type: 'error',
-                            title: 'Error...',
-                            text: 'NO hay stock disponible!'
-                        });
-                    } else {
-                        me.arrayDetalle.push({
-                            idarticulo: me.idarticulo,
-                            articulo: me.articulo,
-                            cantidad: me.cantidad,
-                            precio: me.precio,
-                            descuento: me.descuento,
-                            stock: me.stock
-                        });
-                        me.codigo = "";
-                        me.idarticulo = 0;
-                        me.articulo = "";
-                        me.cantidad = 0;
-                        me.precio = 0;
-                        me.descuento = 0;
-                        me.stock = 0;
-                    }
+
+                    me.arrayDetalle.push({
+                        idplatillo: me.idplatillo,
+                        platillo: me.platillo,
+                        cantidad: me.cantidad,
+                        precio: me.precio
+                    });
+                    me.codigo = "";
+                    me.idplatillo = 0;
+                    me.platillo = "";
+                    me.cantidad = 0;
+                    me.precio = 0;
                 }
             }
         },
@@ -76875,12 +76859,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 });
             } else {
                 me.arrayDetalle.push({
-                    idarticulo: data['id'],
-                    articulo: data['nombre'],
+                    idplatillo: data['id'],
+                    platillo: data['nombre'],
                     cantidad: 1,
-                    precio: data['precio_venta'],
-                    descuento: 0,
-                    stock: data['stock']
+                    precio: data['precio']
+
                 });
             }
         },
@@ -76894,25 +76877,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(error);
             });
         },
-        registrarVenta: function registrarVenta() {
-            if (this.validarVenta()) {
+        registrarPedido: function registrarPedido() {
+            if (this.validarPedido()) {
                 return;
             }
 
             var me = this;
 
-            axios.post('/venta/registrar', {
-                'idcliente': this.idcliente,
+            axios.post('/pedido/registrar', {
+                'idcliente': 2,
                 'tipo_comprobante': this.tipo_comprobante,
                 'serie_comprobante': this.serie_comprobante,
-                'num_comprobante': this.num_comprobante,
-                'impuesto': this.impuesto,
+                'num_comprobante': '000',
+                'idmesa': this.idmesa,
+                'impuesto': 0,
                 'total': this.total,
                 'data': this.arrayDetalle
 
             }).then(function (response) {
                 me.listado = 1;
-                me.listarVenta(1, '', 'num_comprobante');
+                me.listarPedido(1, '', 'num_comprobante');
                 me.idcliente = 0;
                 me.tipo_comprobante = 'BOLETA';
                 me.serie_comprobante = '';
@@ -76932,28 +76916,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(error);
             });
         },
-        validarVenta: function validarVenta() {
+        validarPedido: function validarPedido() {
             var me = this;
-            me.errorPlatillo = 0;
-            me.errorMostrarMsjPlatillo = [];
+            me.errorPedido = 0;
+            me.errorMostrarMsjPedido = [];
             var art;
 
             me.arrayDetalle.map(function (x) {
                 if (x.cantidad > x.stock) {
                     art = x.articulo + " con stock insuficiente";
-                    me.errorMostrarMsjVenta.push(art);
+                    me.errorMostrarMsjPedido.push(art);
                 }
             });
 
-            if (me.idcliente == 0) me.errorMostrarMsjVenta.push("Seleccione un Cliente");
-            if (me.tipo_comprobante == 0) me.errorMostrarMsjVenta.push("Seleccione el comprobante");
-            if (!me.num_comprobante) me.errorMostrarMsjVenta.push("Ingrese el número de comprobante");
-            if (!me.impuesto) me.errorMostrarMsjVenta.push("Ingrese el impuesto de compra");
-            if (me.arrayDetalle.length <= 0) me.errorMostrarMsjVenta.push("Ingrese detalles");
+            if (me.idmesa == 0) me.errorMostrarMsjPedido.push("Seleccione una Mesa");
+            /*  if (me.tipo_comprobante==0) me.errorMostrarMsjVenta.push("Seleccione el comprobante");
+                if (!me.num_comprobante) me.errorMostrarMsjVenta.push("Ingrese el número de comprobante");
+                if (!me.impuesto) me.errorMostrarMsjVenta.push("Ingrese el impuesto de compra");
+                */
+            if (me.arrayDetalle.length <= 0) me.errorMostrarMsjPedido.push("Ingrese detalles");
 
-            if (me.errorMostrarMsjVenta.length) me.errorPlatillo = 1;
+            if (me.errorMostrarMsjPedido.length) me.errorPedido = 1;
 
-            return me.errorVenta;
+            return me.errorPedido;
         },
         mostrarDetalle: function mostrarDetalle() {
             var me = this;
@@ -77286,29 +77271,7 @@ var render = function() {
                               }),
                               _vm._v(" "),
                               _c("td", {
-                                domProps: { textContent: _vm._s(pedido.nombre) }
-                              }),
-                              _vm._v(" "),
-                              _c("td", {
-                                domProps: {
-                                  textContent: _vm._s(pedido.tipo_comprobante)
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c("td", {
-                                domProps: {
-                                  textContent: _vm._s(pedido.serie_comprobante)
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c("td", {
-                                domProps: {
-                                  textContent: _vm._s(pedido.num_comprobante)
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c("td", {
-                                domProps: { textContent: _vm._s(pedido.mesa) }
+                                domProps: { textContent: _vm._s(pedido.numero) }
                               }),
                               _vm._v(" "),
                               _c("td", {
@@ -77319,12 +77282,6 @@ var render = function() {
                               _vm._v(" "),
                               _c("td", {
                                 domProps: { textContent: _vm._s(pedido.total) }
-                              }),
-                              _vm._v(" "),
-                              _c("td", {
-                                domProps: {
-                                  textContent: _vm._s(pedido.impuesto)
-                                }
                               }),
                               _vm._v(" "),
                               _c("td", {
@@ -77437,7 +77394,7 @@ var render = function() {
                             _c("v-select", {
                               attrs: {
                                 "on-search": _vm.selectMesa,
-                                label: "Mesa",
+                                label: "numero",
                                 options: _vm.arrayMesa,
                                 placeholder: "Buscar Mesas...",
                                 onChange: _vm.getDatosMesa
@@ -77456,8 +77413,8 @@ var render = function() {
                               {
                                 name: "show",
                                 rawName: "v-show",
-                                value: _vm.errorPlatillo,
-                                expression: "errorPlatillo"
+                                value: _vm.errorPedido,
+                                expression: "errorPedido"
                               }
                             ],
                             staticClass: "form-group row div-error"
@@ -77466,7 +77423,9 @@ var render = function() {
                             _c(
                               "div",
                               { staticClass: "text-center text-error" },
-                              _vm._l(_vm.errorMostrarMsjVenta, function(error) {
+                              _vm._l(_vm.errorMostrarMsjPedido, function(
+                                error
+                              ) {
                                 return _c("div", {
                                   key: error,
                                   domProps: { textContent: _vm._s(error) }
@@ -77732,7 +77691,7 @@ var render = function() {
                                         _c("td", {
                                           domProps: {
                                             textContent: _vm._s(
-                                              detalle.platilllo
+                                              detalle.platillo
                                             )
                                           }
                                         }),
@@ -77766,6 +77725,36 @@ var render = function() {
                                         ]),
                                         _vm._v(" "),
                                         _c("td", [
+                                          _c("input", {
+                                            directives: [
+                                              {
+                                                name: "model",
+                                                rawName: "v-model",
+                                                value: detalle.cantidad,
+                                                expression: "detalle.cantidad"
+                                              }
+                                            ],
+                                            staticClass: "form-control",
+                                            attrs: { type: "number" },
+                                            domProps: {
+                                              value: detalle.cantidad
+                                            },
+                                            on: {
+                                              input: function($event) {
+                                                if ($event.target.composing) {
+                                                  return
+                                                }
+                                                _vm.$set(
+                                                  detalle,
+                                                  "cantidad",
+                                                  $event.target.value
+                                                )
+                                              }
+                                            }
+                                          })
+                                        ]),
+                                        _vm._v(" "),
+                                        _c("td", [
                                           _vm._v(
                                             "\n                                        " +
                                               _vm._s(
@@ -77790,11 +77779,11 @@ var render = function() {
                                         _vm._v(" "),
                                         _c("td", [
                                           _vm._v(
-                                            "$ " +
+                                            "S/. " +
                                               _vm._s(
-                                                (_vm.totalParcial = (
-                                                  _vm.total - _vm.totalImpuesto
-                                                ).toFixed(2))
+                                                (_vm.totalParcial = _vm.total.toFixed(
+                                                  2
+                                                ))
                                               )
                                           )
                                         ])
@@ -77813,31 +77802,7 @@ var render = function() {
                                         _vm._v(" "),
                                         _c("td", [
                                           _vm._v(
-                                            "$ " +
-                                              _vm._s(
-                                                (_vm.totalImpuesto = (
-                                                  (_vm.total * _vm.impuesto) /
-                                                  (1 + _vm.impuesto)
-                                                ).toFixed(2))
-                                              )
-                                          )
-                                        ])
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "tr",
-                                      {
-                                        staticStyle: {
-                                          "background-color": "#CEECF5"
-                                        }
-                                      },
-                                      [
-                                        _vm._m(5),
-                                        _vm._v(" "),
-                                        _c("td", [
-                                          _vm._v(
-                                            "$ " +
+                                            "S/. " +
                                               _vm._s(
                                                 (_vm.total = _vm.calcularTotal)
                                               )
@@ -77848,7 +77813,7 @@ var render = function() {
                                   ],
                                   2
                                 )
-                              : _c("tbody", [_vm._m(6)])
+                              : _c("tbody", [_vm._m(5)])
                           ]
                         )
                       ])
@@ -77877,7 +77842,7 @@ var render = function() {
                             attrs: { type: "button" },
                             on: {
                               click: function($event) {
-                                _vm.registrarVenta()
+                                _vm.registrarPedido()
                               }
                             }
                           },
@@ -77897,7 +77862,8 @@ var render = function() {
                               _vm._v("Cliente")
                             ]),
                             _vm._v(" "),
-                            _c("p", {
+                            _c("input", {
+                              attrs: { type: "text" },
                               domProps: { textContent: _vm._s(_vm.cliente) }
                             })
                           ])
@@ -77962,7 +77928,7 @@ var render = function() {
                                   "table table-bordered table-striped table-sm"
                               },
                               [
-                                _vm._m(7),
+                                _vm._m(6),
                                 _vm._v(" "),
                                 _vm.arrayDetalle.length
                                   ? _c(
@@ -78026,7 +77992,7 @@ var render = function() {
                                             }
                                           },
                                           [
-                                            _vm._m(8),
+                                            _vm._m(7),
                                             _vm._v(" "),
                                             _c("td", [
                                               _vm._v(
@@ -78050,7 +78016,7 @@ var render = function() {
                                             }
                                           },
                                           [
-                                            _vm._m(9),
+                                            _vm._m(8),
                                             _vm._v(" "),
                                             _c("td", [
                                               _vm._v(
@@ -78073,7 +78039,7 @@ var render = function() {
                                             }
                                           },
                                           [
-                                            _vm._m(10),
+                                            _vm._m(9),
                                             _vm._v(" "),
                                             _c("td", [
                                               _vm._v("$ " + _vm._s(_vm.total))
@@ -78083,7 +78049,7 @@ var render = function() {
                                       ],
                                       2
                                     )
-                                  : _c("tbody", [_vm._m(11)])
+                                  : _c("tbody", [_vm._m(10)])
                               ]
                             )
                           ]
@@ -78273,7 +78239,7 @@ var render = function() {
                       staticClass: "table table-bordered table-striped table-sm"
                     },
                     [
-                      _vm._m(12),
+                      _vm._m(11),
                       _vm._v(" "),
                       _c(
                         "tbody",
@@ -78413,21 +78379,11 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Usuario")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Cliente")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Tipo Comprobante")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Serie Comprobante")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Número Comprobante")]),
-        _vm._v(" "),
         _c("th", [_vm._v("Mesa")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Fecha Hora")]),
+        _c("th", [_vm._v("Fecha")]),
         _vm._v(" "),
         _c("th", [_vm._v("Total")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Impuesto")]),
         _vm._v(" "),
         _c("th", [_vm._v("Estado")])
       ])
@@ -78457,14 +78413,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("td", { attrs: { colspan: "4", align: "right" } }, [
       _c("strong", [_vm._v("Total Parcial:")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "4", align: "right" } }, [
-      _c("strong", [_vm._v("Total Impuesto:")])
     ])
   },
   function() {

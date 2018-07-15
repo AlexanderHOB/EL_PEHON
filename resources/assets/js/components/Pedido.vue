@@ -35,14 +35,9 @@
                                     <tr>
                                         <th>Opciones</th>
                                         <th>Usuario</th>
-                                        <th>Cliente</th>
-                                        <th>Tipo Comprobante</th>
-                                        <th>Serie Comprobante</th>
-                                        <th>Número Comprobante</th>
                                         <th>Mesa</th>
-                                        <th>Fecha Hora</th>
+                                        <th>Fecha</th>                                                                    
                                         <th>Total</th>
-                                        <th>Impuesto</th>
                                         <th>Estado</th>
                                     </tr>
                                 </thead>
@@ -61,15 +56,10 @@
                                                 </button>
                                             </template>
                                         </td>
-                                        <td v-text="pedido.usuario"></td>
-                                        <td v-text="pedido.nombre"></td>
-                                        <td v-text="pedido.tipo_comprobante"></td>
-                                        <td v-text="pedido.serie_comprobante"></td>
-                                        <td v-text="pedido.num_comprobante"></td>
-                                        <td v-text="pedido.mesa"></td>
+                                        <td v-text="pedido.usuario"></td>                              
+                                        <td v-text="pedido.numero"></td>
                                         <td v-text="pedido.fecha_hora"></td>
                                         <td v-text="pedido.total"></td>
-                                        <td v-text="pedido.impuesto"></td>
                                         <td v-text="pedido.estado"></td>
                                     </tr>                                
                                 </tbody>
@@ -100,19 +90,19 @@
                                     <label for="">Mesa(*)</label>
                                     <v-select
                                         :on-search="selectMesa"
-                                        label="Mesa"
+                                        label="numero"
                                         :options="arrayMesa"
                                         placeholder="Buscar Mesas..."
                                         :onChange="getDatosMesa"                                        
-                                    >
+                                    >   
 
                                     </v-select>
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <div v-show="errorPlatillo" class="form-group row div-error">
+                                <div v-show="errorPedido" class="form-group row div-error">
                                     <div class="text-center text-error">
-                                        <div v-for="error in errorMostrarMsjVenta" :key="error" v-text="error">
+                                        <div v-for="error in errorMostrarMsjPedido" :key="error" v-text="error">
 
                                         </div>
                                     </div>
@@ -168,27 +158,29 @@
                                                     <i class="icon-close"></i>
                                                 </button>
                                             </td>
-                                            <td v-text="detalle.platilllo">
+                                            <td v-text="detalle.platillo">
                                             </td>
                                             <td>
                                                 <input v-model="detalle.precio" type="number" class="form-control">
                                             </td>
-                                            
+                                            <td>
+                                                <input v-model="detalle.cantidad" type="number" class="form-control">
+                                            </td>
                                             <td>
                                                 {{detalle.precio*detalle.cantidad}}
                                             </td>
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
                                             <td colspan="4" align="right"><strong>Total Parcial:</strong></td>
-                                            <td>$ {{totalParcial=(total-totalImpuesto).toFixed(2)}}</td>
+                                            <td>S/. {{totalParcial=(total).toFixed(2)}}</td>
                                         </tr>
-                                        <tr style="background-color: #CEECF5;">
+                                    <!--    <tr style="background-color: #CEECF5;">
                                             <td colspan="4" align="right"><strong>Total Impuesto:</strong></td>
                                             <td>$ {{totalImpuesto=((total*impuesto)/(1+impuesto)).toFixed(2)}}</td>
-                                        </tr>
+                                        </tr> -->
                                         <tr style="background-color: #CEECF5;">
                                             <td colspan="4" align="right"><strong>Total Neto:</strong></td>
-                                            <td>$ {{total=calcularTotal}}</td>
+                                            <td>S/. {{total=calcularTotal}}</td>
                                         </tr>
                                     </tbody>
                                     <tbody v-else>
@@ -204,7 +196,7 @@
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>
-                                <button type="button" class="btn btn-primary" @click="registrarVenta()">Registrar Pedido</button>
+                                <button type="button" class="btn btn-primary" @click="registrarPedido()">Registrar Pedido</button>
                             </div>
                         </div>
                     </div>
@@ -217,7 +209,8 @@
                             <div class="col-md-9">
                                 <div class="form-group">
                                     <label for="">Cliente</label>
-                                    <p v-text="cliente"></p>
+                                    <input type="text" v-text="cliente">
+                            
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -387,6 +380,7 @@
             return {
                 pedido_id: 0,
                 idcliente:0,
+                idmesa:0,
                 cliente:'',
                 tipo_comprobante : 'BOLETA',
                 serie_comprobante : '',
@@ -398,6 +392,7 @@
                 totalParcial: 0.0,
                 arrayPedido : [],
                 arrayCliente: [],
+                arrayMesa:[],
                 arrayDetalle : [],
                 listado:1,
                 modal : 0,
@@ -460,7 +455,7 @@
             calcularTotal: function(){
                 var resultado=0.0;
                 for(var i=0;i<this.arrayDetalle.length;i++){
-                    resultado=resultado+(this.arrayDetalle[i].precio*this.arrayDetalle[i].cantidad-this.arrayDetalle[i].descuento)
+                    resultado=resultado+(this.arrayDetalle[i].precio*this.arrayDetalle[i].cantidad)
                 }
                 return resultado;
             }
@@ -468,7 +463,7 @@
         methods : {
             listarPedido (page,buscar,criterio){
                 let me=this;
-                var url= '/pedido?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
+                var url= '/pedido/obtenerPedidos?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
                 axios.get(url).then(function (response) {
                     var respuesta= response.data;
                     me.arrayPedido = respuesta.pedidos.data;
@@ -478,15 +473,15 @@
                     console.log(error);
                 });
             },
-            selectCliente(search,loading){
+            selectMesa(search,loading){
                 let me=this;
                 loading(true)
 
-                var url= '/cliente/selectCliente?filtro='+search;
+                var url= '/mesa/selectMesa?filtro='+search;
                 axios.get(url).then(function (response) {
                     let respuesta = response.data;
                     q: search
-                    me.arrayCliente=respuesta.clientes;
+                    me.arrayMesa=respuesta.mesas;
                     loading(false)
                 })
                 .catch(function (error) {
@@ -496,10 +491,10 @@
             pdfVenta(id){
                 window.open('http://127.0.0.1:8000/venta/pdf/'+id+','+'_blank');
             },
-            getDatosCliente(val1){
+            getDatosMesa(val1){
                 let me = this;
                 me.loading = true;
-                me.idcliente = val1.id;
+                me.idmesa = val1.id;
             },
             buscarPlatillo(){
                 let me=this;
@@ -534,7 +529,7 @@
             encuentra(id){
                 var sw=0;
                 for(var i=0;i<this.arrayDetalle.length;i++){
-                    if(this.arrayDetalle[i].idarticulo==id){
+                    if(this.arrayDetalle[i].idplatillo==id){
                         sw=true;
                     }
                 }
@@ -546,46 +541,31 @@
             },
             agregarDetalle(){
                 let me=this;
-                if(me.idarticulo==0 || me.cantidad==0 || me.precio==0){
+                if(me.idplatillo==0 || me.cantidad==0 || me.precio==0){
                 }
                 else{
-                    if(me.encuentra(me.idarticulo)){
+                    if(me.encuentra(me.idplatillo)){
                         swal({
                             type: 'error',
                             title: 'Error...',
-                            text: 'Ese artículo ya se encuentra agregado!',
+                            text: 'Ese platillo ya se encuentra agregado!',
                             })
                     }
                     else{
-                       if(me.cantidad>me.stock){
-                           swal({
-                            type: 'error',
-                            title: 'Error...',
-                            text: 'NO hay stock disponible!',
-                            })
-                       } 
-                       else{
+                       
                            me.arrayDetalle.push({
-                                idarticulo: me.idarticulo,
-                                articulo: me.articulo,
+                                idplatillo: me.idplatillo,
+                                platillo: me.platillo,
                                 cantidad: me.cantidad,
                                 precio: me.precio,
-                                descuento: me.descuento,
-                                stock: me.stock
                             });
                             me.codigo="";
-                            me.idarticulo=0;
-                            me.articulo="";
+                            me.idplatillo=0;
+                            me.platillo="";
                             me.cantidad=0;
                             me.precio=0;
-                            me.descuento=0;
-                            me.stock=0
                        }
-                    }
-                    
-                }
-
-                
+                    }              
 
             },
             agregarDetalleModal(data =[]){
@@ -599,12 +579,11 @@
                     }
                     else{
                        me.arrayDetalle.push({
-                            idarticulo: data['id'],
-                            articulo: data['nombre'],
+                            idplatillo: data['id'],
+                            platillo: data['nombre'],
                             cantidad: 1,
-                            precio: data['precio_venta'],
-                            descuento:0,
-                            stock:data['stock']
+                            precio: data['precio'],
+                            
                         }); 
                     }
             },
@@ -619,25 +598,26 @@
                     console.log(error);
                 });
             },
-            registrarVenta(){
-                if (this.validarVenta()){
+            registrarPedido(){
+                if (this.validarPedido()){
                     return;
                 }
                 
                 let me = this;
 
-                axios.post('/venta/registrar',{
-                    'idcliente': this.idcliente,
+                axios.post('/pedido/registrar',{
+                    'idcliente': 2,
                     'tipo_comprobante': this.tipo_comprobante,
                     'serie_comprobante' : this.serie_comprobante,
-                    'num_comprobante' : this.num_comprobante,
-                    'impuesto' : this.impuesto,
+                    'num_comprobante' : '000',
+                    'idmesa' : this.idmesa,
+                    'impuesto':0,
                     'total' : this.total,
                     'data': this.arrayDetalle
 
                 }).then(function (response) {
                     me.listado=1;
-                    me.listarVenta(1,'','num_comprobante');
+                    me.listarPedido(1,'','num_comprobante');
                     me.idcliente=0;
                     me.tipo_comprobante='BOLETA';
                     me.serie_comprobante='';
@@ -657,28 +637,29 @@
                     console.log(error);
                 });
             },
-            validarVenta(){
+            validarPedido(){
                 let me=this;
-                me.errorPlatillo=0;
-                me.errorMostrarMsjPlatillo =[];
+                me.errorPedido=0;
+                me.errorMostrarMsjPedido =[];
                 var art;
                 
                 me.arrayDetalle.map(function(x){
                     if (x.cantidad>x.stock){
                         art=x.articulo + " con stock insuficiente";
-                        me.errorMostrarMsjVenta.push(art);
+                        me.errorMostrarMsjPedido.push(art);
                     }
                 });
 
-                if (me.idcliente==0) me.errorMostrarMsjVenta.push("Seleccione un Cliente");
-                if (me.tipo_comprobante==0) me.errorMostrarMsjVenta.push("Seleccione el comprobante");
+                if (me.idmesa==0) me.errorMostrarMsjPedido.push("Seleccione una Mesa");
+            /*  if (me.tipo_comprobante==0) me.errorMostrarMsjVenta.push("Seleccione el comprobante");
                 if (!me.num_comprobante) me.errorMostrarMsjVenta.push("Ingrese el número de comprobante");
                 if (!me.impuesto) me.errorMostrarMsjVenta.push("Ingrese el impuesto de compra");
-                if (me.arrayDetalle.length<=0) me.errorMostrarMsjVenta.push("Ingrese detalles");
+                */
+                if (me.arrayDetalle.length<=0) me.errorMostrarMsjPedido.push("Ingrese detalles");
+                
+                if (me.errorMostrarMsjPedido.length) me.errorPedido = 1;
 
-                if (me.errorMostrarMsjVenta.length) me.errorPlatillo = 1;
-
-                return me.errorVenta;
+                return me.errorPedido;
             },
             mostrarDetalle(){
                 let me=this;

@@ -272,7 +272,7 @@
                                 varMesIngreso=[];
                                 varTotalIngreso=[];
                                 contenido.innerHTML="";
-                                document.getElementById("myChart").innerHTML='';
+                                
                            /* for(var i=0,n=data.length;i<n;i++){                           
                                 temp=document.createElement('span');
                                 temp.innerHTML="Mes: "+data[i].mes+" Total:  "+data[i].total;
@@ -294,7 +294,7 @@
                                 data: {
                                     labels: varMesIngreso,
                                     datasets: [{
-                                        label: 'Ingresos',
+                                        label: 'Ventas',
                                         data: varTotalIngreso,
                                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
                                         borderColor: 'rgba(255, 99, 132, 0.2)',
@@ -363,7 +363,7 @@
                                 data: {
                                     labels: varMesIngreso,
                                     datasets: [{
-                                        label: 'Ingresos',
+                                        label: 'Ventas',
                                         data: varTotalIngreso,
                                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
                                         borderColor: 'rgba(255, 99, 132, 0.2)',
@@ -426,7 +426,7 @@
                                 varMesIngreso.push(x.mes);
                                 varTotalIngreso.push(x.total);
                             });
-                            var ctx = document.getElementById("myChart").getContext('2d');
+                            var ctx = document.getElementById("myChart1").getContext('2d');
                             var myChart = new Chart(ctx, {
                                 type: 'bar',
                                 data: {

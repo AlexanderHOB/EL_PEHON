@@ -18,6 +18,7 @@ class CreateUsersTable extends Migration
             $table->foreign('id')->references('id')->on('personas')->onDelete('cascade');
 
             $table->string('usuario')->unique();
+            $table->string('email')->unique();
             $table->string('password');
             $table->boolean('condicion')->default(1);
 

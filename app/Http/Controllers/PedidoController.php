@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\{Pedido, DetallePedido};
 use Illuminate\Support\Facades\DB;
@@ -45,6 +45,40 @@ class PedidoController extends Controller
             'pedidos' => $pedidos
         ];
         
+    }
+    public function obtenerPedidos(Request $request ){
+        //if(!$request->ajax()) return redirect('/');
+
+        $buscar= $request->buscar;
+        $criterio=$request->criterio;
+        if($buscar==''){
+            $pedidos = Pedido::join('users','pedidos.idusuario','=','users.id')
+            ->join('mesas','pedidos.idmesa','=','mesas.id')
+            ->select('pedidos.id', 'pedidos.fecha_hora','pedidos.impuesto','pedidos.total','pedidos.estado'
+            ,'users.usuario','mesas.numero')
+            ->orderBy('pedidos.id','desc')
+            ->paginate(10);
+        }else{
+            $pedidos = Pedido::join('users','pedidos.idusuario','=','users.id')
+            ->join('mesas','pedidos.idmesa','=','mesas.id')
+            ->select('pedidos.id', 'pedidos.fecha_hora','pedidos.impuesto','pedidos.total','pedidos.estado'
+            ,'users.usuario','mesas.numero')
+            ->orderBy('pedidos.id','desc')
+            ->where('pedidos.'.$criterio,'like','%'.$buscar.'%')
+            ->orderBy('pedidos.id','desc')->paginate(5);
+        }
+        
+        return [
+            'pagination' => [
+                'total' =>          $pedidos->total(),
+                'current_page'=>    $pedidos->currentPage(),
+                'per_page'=>        $pedidos->perPage(),
+                'last_page'=>       $pedidos->lastPage(),
+                'from' =>           $pedidos->firstItem(),
+                'to' =>             $pedidos->lastItem()
+            ],
+            'pedidos' => $pedidos
+        ];
     }
     public function obtenerCabecera(Request $request){
         if (!$request->ajax()) return redirect('/');
@@ -100,7 +134,7 @@ class PedidoController extends Controller
             //Recorro todo los elementos
             foreach ($detalles as $ep=>$det)
             {
-                $detalle=new PedidoPlatillo();
+                $detalle=new DetallePedido();
                 $detalle->idpedido=$pedido->id;
                 $detalle->idplatillo=$det['idplatillo'];
                 $detalle->cantidad=$det['cantidad'];
