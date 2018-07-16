@@ -20,10 +20,10 @@ class MesaController extends Controller
         $criterio = $request->criterio;
 
         if ($buscar == ''){
-            $mesas=Mesa::orderBy('id', 'desc')->paginate(3);
+            $mesas=Mesa::orderBy('id', 'desc')->paginate(8);
         }
         else{
-            $mesas=Mesa::where($criterio, 'like', '%'.$buscar.'%')->orderBy('id', 'desc')->paginate(3);
+            $mesas=Mesa::where($criterio, 'like', '%'.$buscar.'%')->orderBy('id', 'desc')->paginate(8);
         }
         return[
             'pagination'    =>[

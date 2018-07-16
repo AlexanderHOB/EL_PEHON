@@ -73645,6 +73645,82 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -73655,11 +73731,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             varTotalIngreso: [],
             varMesIngreso: [],
 
+            varIngresoDia: null,
+            charIngresoDia: null,
+            ingresosDia: [],
+            varTotalIngresoDia: [],
+            varMesIngresoDia: [],
+
             varVenta: null,
             charVenta: null,
             ventas: [],
             varTotalVenta: [],
-            varMesVenta: []
+            varMesVenta: [],
+
+            varVentaDia: null,
+            charVentaDia: null,
+            ventasDia: [],
+            varTotalVentaDia: [],
+            varMesVentaDia: []
+
         };
     },
 
@@ -73676,6 +73765,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(error);
             });
         },
+        getIngresosDia: function getIngresosDia() {
+            var me = this;
+            var url = '/dashboard';
+            axios.get(url).then(function (response) {
+                var respuesta = response.data;
+                me.ingresosDia = respuesta.ingresosDia;
+                //cargamos los datos del chart
+                me.loadIngresosDia();
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
         getVentas: function getVentas() {
             var me = this;
             var url = '/dashboard';
@@ -73684,6 +73785,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 me.ventas = respuesta.ventas;
                 //cargamos los datos del chart
                 me.loadVentas();
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        getVentasDia: function getVentasDia() {
+            var me = this;
+            var url = '/dashboard';
+            axios.get(url).then(function (response) {
+                var respuesta = response.data;
+                me.ventasDia = respuesta.ventasDia;
+                //cargamos los datos del chart
+                me.loadVentasDia();
             }).catch(function (error) {
                 console.log(error);
             });
@@ -73705,6 +73818,61 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         data: me.varTotalIngreso,
                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
                         borderColor: 'rgba(255, 99, 132, 0.2)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        },
+        loadIngresosDia: function loadIngresosDia() {
+            var me = this;
+            me.ingresosDia.map(function (x) {
+                me.varMesIngresoDia.push(x.dia);
+                me.varTotalIngresoDia.push(x.total);
+            });
+            me.varIngresoDia = document.getElementById('ingresosDia').getContext('2d');
+
+            me.charIngresoDia = new Chart(me.varIngresoDia, {
+                type: 'bar',
+                data: {
+                    labels: me.varMesIngresoDia,
+                    datasets: [{
+                        label: 'Ingresos Diarios',
+                        data: me.varTotalIngresoDia,
+                        backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+            me.varIngresoDia = document.getElementById('polarIngresos').getContext('2d');
+
+            me.charIngresoDia = new Chart(me.varIngresoDia, {
+                type: 'polarArea',
+                data: {
+                    labels: me.varMesIngresoDia,
+                    datasets: [{
+                        label: 'Ingresos Diarios',
+                        data: me.varTotalIngresoDia,
+                        backgroundColor: ['rgb(5,155,255)', 'rgb(255,99,132)', 'rgb(75,192,192)', 'rgb(255,205,86)', 'rgb(201,203,207)', 'rgb(75,192,192)'],
+                        borderColor: 'rgba(255, 159, 64, 1)',
                         borderWidth: 1
                     }]
                 },
@@ -73749,11 +73917,68 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     }
                 }
             });
+        },
+        loadVentasDia: function loadVentasDia() {
+            var me = this;
+            me.ventasDia.map(function (x) {
+                me.varMesVentaDia.push(x.dia);
+                me.varTotalVentaDia.push(x.total);
+            });
+            me.varVentaDia = document.getElementById('ventasDia').getContext('2d');
+
+            me.charVentaDia = new Chart(me.varVentaDia, {
+                type: 'bar',
+                data: {
+                    labels: me.varMesVentaDia,
+                    datasets: [{
+                        label: 'Ventas Diarias',
+                        data: me.varTotalVentaDia,
+                        backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                        borderColor: 'rgba(255, 206, 86, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+            me.varVentaDia = document.getElementById('polarVentas').getContext('2d');
+
+            me.charVentaDia = new Chart(me.varVentaDia, {
+                type: 'polarArea',
+                data: {
+                    labels: me.varMesVentaDia,
+                    datasets: [{
+                        label: 'Ventas Diarias',
+                        data: me.varTotalVentaDia,
+                        backgroundColor: ['rgb(5,155,255)', 'rgb(255,99,132)', 'rgb(75,192,192)', 'rgb(255,205,86)', 'rgb(201,203,207)', 'rgb(75,192,192)'],
+                        borderColor: 'rgba(255, 206, 86, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
         }
     },
     mounted: function mounted() {
         this.getIngresos();
         this.getVentas();
+        this.getIngresosDia();
+        this.getVentasDia();
     }
 });
 
@@ -73812,6 +74037,86 @@ var staticRenderFns = [
                   _c("div", { staticClass: "card-content" }, [
                     _c("div", { staticClass: "ct-chart" }, [
                       _c("canvas", { attrs: { id: "ventas" } })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-footer" }, [
+                    _c("p", [_vm._v("Ventas de los últimos meses.")])
+                  ])
+                ])
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "car-body" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-md-6" }, [
+                _c("div", { staticClass: "card card-chart" }, [
+                  _c("div", { staticClass: "card-header" }, [
+                    _c("h4", [_vm._v("Ingresos por día")])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-content" }, [
+                    _c("div", { staticClass: "ct-chart" }, [
+                      _c("canvas", { attrs: { id: "ingresosDia" } })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-footer" }, [
+                    _c("p", [_vm._v("Compras de los últimos dias.")])
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-6" }, [
+                _c("div", { staticClass: "card card-chart" }, [
+                  _c("div", { staticClass: "card-header" }, [
+                    _c("h4", [_vm._v("Ventas del día")])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-content" }, [
+                    _c("div", { staticClass: "ct-chart" }, [
+                      _c("canvas", { attrs: { id: "ventasDia" } })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-footer" }, [
+                    _c("p", [_vm._v("Ventas de los últimos dias.")])
+                  ])
+                ])
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "car-body" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-md-6" }, [
+                _c("div", { staticClass: "card card-chart" }, [
+                  _c("div", { staticClass: "card-header" }, [
+                    _c("h4", [_vm._v("Ingresos")])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-content" }, [
+                    _c("div", { staticClass: "ct-chart" }, [
+                      _c("canvas", { attrs: { id: "polarIngresos" } })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-footer" }, [
+                    _c("p", [_vm._v("Compras de los últimos meses.")])
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-6" }, [
+                _c("div", { staticClass: "card card-chart" }, [
+                  _c("div", { staticClass: "card-header" }, [
+                    _c("h4", [_vm._v("Ventas")])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-content" }, [
+                    _c("div", { staticClass: "ct-chart" }, [
+                      _c("canvas", { attrs: { id: "polarVentas" } })
                     ])
                   ]),
                   _vm._v(" "),

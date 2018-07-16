@@ -41,10 +41,12 @@ class DashboardController extends Controller
         ->whereYear('i.fecha_hora',$anio)
         ->groupBy(DB::raw('DAY(i.fecha_hora)'),DB::raw('MONTH(i.fecha_hora)'))
         ->get();
- 
+        
+       
         
  
-        return ['ingresos'=>$ingresos,'ventas'=>$ventas,'anio'=>$anio];      
+        return ['ingresos'=>$ingresos,'ventas'=>$ventas,
+        'ventasDia'=>$ventasDia,'ingresosDia'=>$ingresosDia,'anio'=>$anio];      
  
     }
 }

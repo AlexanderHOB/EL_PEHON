@@ -20,9 +20,9 @@ class CategoriaPlatilloController extends Controller
         $buscar= $request->buscar;
         $criterio=$request->criterio;
         if($buscar==''){
-            $categorias=CategoriaPlatillo::orderBy('id','desc')->paginate(5);
+            $categorias=CategoriaPlatillo::orderBy('id','desc')->paginate(10);
         }else{
-            $categorias= CategoriaPlatillo::where($criterio,'like','%'.$buscar.'%')->orderBy('id','desc')->paginate(3);
+            $categorias= CategoriaPlatillo::where($criterio,'like','%'.$buscar.'%')->orderBy('id','desc')->paginate(10);
         }
         
         return [

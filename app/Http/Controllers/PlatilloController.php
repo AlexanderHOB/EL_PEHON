@@ -18,14 +18,14 @@ class PlatilloController extends Controller
             ->select('platillos.id','platillos.idcategoria','platillos.codigo','platillos.area',
             'platillos.nombre','categorias_platillos.nombre as nombre_categoria',
             'platillos.precio','platillos.descripcion','platillos.condicion')
-            ->orderBy('platillos.id','desc')->paginate(5);
+            ->orderBy('platillos.id','desc')->paginate(10);
         }else{
             $platillos=Platillo::join('categorias_platillos','platillos.idcategoria','=','categorias_platillos.id')
             ->select('platillos.id','platillos.idcategoria','platillos.codigo',
             'platillos.nombre','categorias_platillos.nombre as nombre_categoria',
             'platillos.precio','platillos.descripcion','platillos.condicion')
             ->where('platillos.'.$criterio,'like','%'.$buscar.'%')
-            ->orderBy('platillos.id','desc')->paginate(5);           
+            ->orderBy('platillos.id','desc')->paginate(10);           
         }
         
         return [
