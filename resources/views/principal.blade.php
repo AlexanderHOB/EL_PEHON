@@ -68,6 +68,8 @@
                 @include('plantilla.sidebarmozo')
             @elseif (Auth::user()->idrol == 3)
                 @include('plantilla.sidebarcaja')
+            @elseif (Auth::user()->idrol == 4)
+                 @include('plantilla.sidebaralmacenero')
             @else
 
             @endif

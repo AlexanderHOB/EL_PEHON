@@ -63,6 +63,7 @@ class Kernel extends HttpKernel
         'Administrador'=>\App\Http\Middleware\Administrador::class,
         'Caja'=>\App\Http\Middleware\Caja::class,
         'Mozo'=>\App\Http\Middleware\Mozo::class,
+        'Logistica'=>\App\Http\Middleware\Almacenero::class,
         'cors'=>\Barryvdh\Cors\HandleCors::class
     ];
 }

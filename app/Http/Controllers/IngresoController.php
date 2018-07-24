@@ -109,7 +109,7 @@ class IngresoController extends Controller
             }          
            /* $fechaActual= date('Y-m-d');
             $numVentas = DB::table('ventas')->whereDate('created_at', $fechaActual)->count(); 
-            $numIngresos = DB::table('ingresos')->whereDate('created_at',$fechaActual)->count(); 
+            $numIngresos = DB::table('ingresos')->whereDate('creatved_at',$fechaActual)->count(); 
 
             $arregloDatos = [ 
             'ventas' => [ 
