@@ -66,7 +66,7 @@ class CategoriaController extends Controller
     public function update(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-        $categoria = Categoria::findOrFail($request->id);
+        $categoria = Categoria::    
         $categoria->nombre = $request->nombre;
         $categoria->descripcion = $request->descripcion;
         $categoria->condicion = '1';
